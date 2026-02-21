@@ -3,13 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Google Sheets - Kolom B & C</title>
+    <title>Memo Keterlambatan Result - Google Sheets</title>
     
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     
     <style>
         * {
@@ -18,65 +21,162 @@
             box-sizing: border-box;
         }
         
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #f8961e;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+        }
+        
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             overflow: hidden;
         }
         
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             padding: 30px;
-            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
         }
         
         .header h1 {
             font-size: 2.5em;
             margin-bottom: 10px;
-            font-weight: 500;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
         
         .header h1 i {
-            margin-right: 10px;
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 15px;
+            font-size: 0.8em;
         }
         
-        .header p {
-            font-size: 1.1em;
-            opacity: 0.9;
+        .badge {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: white;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: transform 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5em;
+        }
+        
+        .stat-info h3 {
+            font-size: 0.9em;
+            color: var(--gray);
+            margin-bottom: 5px;
+        }
+        
+        .stat-info p {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: var(--dark);
         }
         
         .sheet-info {
-            background: #f8f9fa;
+            background: white;
             padding: 20px 30px;
             border-bottom: 1px solid #e0e0e0;
             display: flex;
             flex-wrap: wrap;
-            gap: 20px;
-            justify-content: space-between;
+            gap: 25px;
             align-items: center;
         }
         
-        .info-item {
+        .info-tag {
             display: flex;
             align-items: center;
             gap: 10px;
-            color: #555;
+            color: var(--gray);
+            font-size: 0.95em;
         }
         
-        .info-item i {
-            color: #667eea;
-            font-size: 1.2em;
+        .info-tag i {
+            color: var(--primary);
+            width: 20px;
+        }
+        
+        .info-tag span {
+            color: var(--dark);
+            font-weight: 500;
         }
         
         .controls {
@@ -92,7 +192,7 @@
         .search-box {
             flex: 1;
             position: relative;
-            min-width: 250px;
+            min-width: 300px;
         }
         
         .search-box i {
@@ -100,67 +200,68 @@
             left: 15px;
             top: 50%;
             transform: translateY(-50%);
-            color: #999;
+            color: var(--gray);
         }
         
         .search-box input {
             width: 100%;
-            padding: 12px 20px 12px 45px;
+            padding: 14px 20px 14px 45px;
             border: 2px solid #e0e0e0;
-            border-radius: 25px;
-            font-size: 1em;
+            border-radius: 12px;
+            font-size: 0.95em;
             transition: all 0.3s;
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Inter', sans-serif;
         }
         
         .search-box input:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(67,97,238,0.1);
         }
         
         .btn {
-            padding: 12px 25px;
+            padding: 14px 25px;
             border: none;
-            border-radius: 25px;
-            font-size: 1em;
+            border-radius: 12px;
+            font-size: 0.95em;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.3s;
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Inter', sans-serif;
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
         }
         
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102,126,234,0.4);
-        }
-        
-        .btn-secondary {
-            background: #f8f9fa;
-            color: #555;
-            border: 2px solid #e0e0e0;
-        }
-        
-        .btn-secondary:hover {
-            background: #e0e0e0;
+            box-shadow: 0 10px 20px rgba(67,97,238,0.3);
         }
         
         .btn-success {
-            background: #28a745;
+            background: linear-gradient(135deg, #4cc9f0, #4895ef);
             color: white;
         }
         
-        .btn-success:hover {
-            background: #218838;
-            transform: translateY(-2px);
+        .btn-warning {
+            background: linear-gradient(135deg, #f8961e, #f3722c);
+            color: white;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
         }
         
         .table-container {
@@ -173,54 +274,67 @@
             border-collapse: collapse;
             margin-top: 20px;
             background: white;
-            border-radius: 10px;
+            border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
         }
         
         th {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             font-weight: 500;
-            padding: 15px;
+            padding: 18px 15px;
             text-align: left;
-            font-size: 1.1em;
+            font-size: 0.95em;
         }
         
         th i {
             margin-right: 8px;
+            opacity: 0.9;
         }
         
         td {
-            padding: 12px 15px;
+            padding: 15px;
             border-bottom: 1px solid #e0e0e0;
-            color: #555;
+            color: var(--dark);
         }
         
-        tr:hover {
-            background-color: #f8f9fa;
+        tr:last-child td {
+            border-bottom: none;
+        }
+        
+        tr:hover td {
+            background-color: rgba(67,97,238,0.02);
         }
         
         .row-number {
-            font-weight: 500;
-            color: #667eea;
-            width: 60px;
+            font-weight: 600;
+            color: var(--primary);
+            width: 70px;
         }
         
         .empty-data {
-            color: #999;
+            color: var(--gray);
             font-style: italic;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .empty-data i {
+            font-size: 0.8em;
+            opacity: 0.5;
         }
         
         .loading {
             text-align: center;
-            padding: 50px;
-            color: #666;
+            padding: 60px;
+            color: var(--gray);
         }
         
         .loading i {
             font-size: 3em;
-            color: #667eea;
+            color: var(--primary);
             margin-bottom: 15px;
             animation: spin 1s linear infinite;
         }
@@ -231,63 +345,114 @@
         }
         
         .error {
-            background: #f8d7da;
-            color: #721c24;
-            padding: 15px 30px;
+            background: linear-gradient(135deg, #f72585, #b5179e);
+            color: white;
+            padding: 20px 30px;
             margin: 20px 30px;
-            border-radius: 10px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            border: 1px solid #f5c6cb;
+            gap: 15px;
+            animation: slideIn 0.3s ease;
         }
         
-        .error i {
-            font-size: 1.5em;
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
         
-        .stats {
-            padding: 15px 30px;
-            background: #f8f9fa;
+        .stats-footer {
+            padding: 20px 30px;
+            background: white;
             border-top: 1px solid #e0e0e0;
-            color: #666;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 15px;
         }
         
-        .stats span {
-            font-weight: 500;
-            color: #333;
-        }
-        
-        .export-options {
+        .pagination {
             display: flex;
             gap: 10px;
+            align-items: center;
         }
         
-        .footer {
-            text-align: center;
-            padding: 20px;
+        .page-btn {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #e0e0e0;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .page-btn:hover:not(:disabled) {
+            background: var(--primary);
             color: white;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: var(--primary);
         }
         
-        .footer a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
         
-        .footer a:hover {
-            text-decoration: underline;
+        .page-info {
+            padding: 0 15px;
+            color: var(--gray);
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: white;
+            padding: 15px 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideUp 0.3s ease;
+            z-index: 1000;
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .toast.success {
+            border-left: 4px solid #4cc9f0;
+        }
+        
+        .toast.error {
+            border-left: 4px solid #f72585;
         }
         
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 1.8em;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
             }
             
             .controls {
@@ -303,12 +468,7 @@
                 justify-content: center;
             }
             
-            .sheet-info {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .stats {
+            .stats-footer {
                 flex-direction: column;
                 text-align: center;
             }
@@ -316,101 +476,193 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container" data-aos="fade-up">
         <div class="header">
-            <h1>
-                <i class="fas fa-google-sheets"></i>
-                Google Sheets Data Viewer
-            </h1>
-            <p>Menampilkan data dari kolom B dan C</p>
-        </div>
-        
-        <div class="sheet-info" id="sheetInfo">
-            <div class="info-item">
-                <i class="fas fa-spreadsheet"></i>
-                <span>Loading sheet info...</span>
-            </div>
-            <div class="info-item">
-                <i class="fas fa-clock"></i>
-                <span id="lastUpdate">-</span>
+            <div class="header-content">
+                <h1>
+                    <i class="fas fa-clock"></i>
+                    Memo Keterlambatan Result
+                    <span class="badge">
+                        <i class="fas fa-google-sheets"></i>
+                        Live Data
+                    </span>
+                </h1>
+                <p>Monitoring data keterlambatan hasil dari Google Sheets</p>
             </div>
         </div>
         
-        <div class="controls">
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card" data-aos="fade-right">
+                <div class="stat-icon">
+                    <i class="fas fa-database"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Total Data</h3>
+                    <p id="totalData">-</p>
+                </div>
+            </div>
+            <div class="stat-card" data-aos="fade-right" data-aos-delay="100">
+                <div class="stat-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Data Terisi</h3>
+                    <p id="filledData">-</p>
+                </div>
+            </div>
+            <div class="stat-card" data-aos="fade-right" data-aos-delay="200">
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Last Update</h3>
+                    <p id="lastUpdate">-</p>
+                </div>
+            </div>
+            <div class="stat-card" data-aos="fade-right" data-aos-delay="300">
+                <div class="stat-icon">
+                    <i class="fas fa-layer-group"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Sheet</h3>
+                    <p id="sheetName">MEMO KETERLAMBATAN</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="sheet-info" id="sheetInfo" data-aos="fade-up">
+            <div class="info-tag">
+                <i class="fas fa-file-excel"></i>
+                <span id="spreadsheetName">Loading...</span>
+            </div>
+            <div class="info-tag">
+                <i class="fas fa-layer-group"></i>
+                <span id="activeSheet">MEMO KETERLAMBATAN RESULT</span>
+            </div>
+            <div class="info-tag">
+                <i class="fas fa-calendar"></i>
+                <span id="currentDateTime">-</span>
+            </div>
+        </div>
+        
+        <div class="controls" data-aos="fade-up">
             <div class="search-box">
                 <i class="fas fa-search"></i>
-                <input type="text" id="searchInput" placeholder="Cari data..." onkeyup="filterData()">
+                <input type="text" id="searchInput" placeholder="Cari data keterlambatan... (tekan Enter)" onkeyup="filterData(event)">
             </div>
             <button class="btn btn-primary" onclick="loadData()">
                 <i class="fas fa-sync-alt"></i>
-                Refresh Data
+                Refresh
             </button>
             <button class="btn btn-success" onclick="exportToCSV()">
                 <i class="fas fa-file-csv"></i>
                 Export CSV
             </button>
-            <button class="btn btn-secondary" onclick="exportToJSON()">
-                <i class="fas fa-file-code"></i>
-                Export JSON
+            <button class="btn btn-warning" onclick="exportToExcel()">
+                <i class="fas fa-file-excel"></i>
+                Export Excel
+            </button>
+            <button class="btn btn-outline" onclick="printData()">
+                <i class="fas fa-print"></i>
+                Print
             </button>
         </div>
         
-        <div id="error" class="error" style="display: none;">
-            <i class="fas fa-exclamation-circle"></i>
+        <div id="error" class="error" style="display: none;" data-aos="fade-up">
+            <i class="fas fa-exclamation-triangle"></i>
             <span id="errorMessage"></span>
         </div>
         
-        <div id="loading" class="loading" style="display: none;">
+        <div id="loading" class="loading" style="display: none;" data-aos="fade-up">
             <i class="fas fa-spinner"></i>
-            <p>Memuat data...</p>
+            <p>Memuat data keterlambatan...</p>
         </div>
         
-        <div class="table-container" id="tableContainer">
+        <div class="table-container" id="tableContainer" data-aos="fade-up">
             <table id="dataTable">
                 <thead>
                     <tr>
                         <th><i class="fas fa-hashtag"></i> No</th>
-                        <th><i class="fas fa-columns"></i> <span id="headerB">Kolom B</span></th>
-                        <th><i class="fas fa-columns"></i> <span id="headerC">Kolom C</span></th>
+                        <th><i class="fas fa-tag"></i> <span id="headerB">Memo Keterlambatan</span></th>
+                        <th><i class="fas fa-clock"></i> <span id="headerC">Result</span></th>
                     </tr>
                 </thead>
                 <tbody id="tableBody">
                     <tr>
-                        <td colspan="3" style="text-align: center; padding: 30px;">
-                            <i class="fas fa-cloud-upload-alt" style="font-size: 3em; color: #ccc; margin-bottom: 10px;"></i>
-                            <p>Klik tombol Refresh untuk memuat data</p>
+                        <td colspan="3" style="text-align: center; padding: 50px;">
+                            <i class="fas fa-cloud-upload-alt" style="font-size: 3em; color: #ccc; margin-bottom: 15px;"></i>
+                            <p style="color: var(--gray);">Klik tombol Refresh untuk melihat data keterlambatan</p>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
         
-        <div class="stats" id="stats">
-            <div class="info-item">
-                <i class="fas fa-database"></i>
-                <span id="totalRows">0</span> baris data
+        <div class="stats-footer" id="statsFooter">
+            <div class="info-tag">
+                <i class="fas fa-list"></i>
+                <span id="displayInfo">Menampilkan 0 dari 0 data</span>
             </div>
-            <div class="export-options">
-                <span id="filterInfo"></span>
+            <div class="pagination">
+                <button class="page-btn" onclick="prevPage()" id="prevBtn" disabled>
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <span class="page-info" id="pageInfo">Halaman 1 dari 1</span>
+                <button class="page-btn" onclick="nextPage()" id="nextBtn" disabled>
+                    <i class="fas fa-chevron-right"></i>
+                </button>
             </div>
         </div>
     </div>
     
-    <div class="footer">
-        <p>Data diambil dari <a href="https://docs.google.com/spreadsheets/d/1fpGwJMTs9ViJyMNmIo0eJQAi1jSmA0a2MmhVxL_y-7s/edit" target="_blank">Google Sheets ini</a></p>
-        <p style="opacity: 0.8; font-size: 0.9em;">&copy; 2024 - Google Sheets Data Viewer</p>
+    <!-- Toast notification -->
+    <div id="toast" class="toast" style="display: none;">
+        <i class="fas fa-info-circle"></i>
+        <span id="toastMessage"></span>
     </div>
     
+    <!-- AOS Animation -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
     <script>
+        // Inisialisasi AOS
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+        
         let originalData = [];
         let filteredData = [];
-        let headers = { b: 'Kolom B', c: 'Kolom C' };
+        let headers = { b: 'Memo Keterlambatan', c: 'Result' };
+        let metadata = {};
+        
+        // Pagination
+        let currentPage = 1;
+        let rowsPerPage = 10;
         
         // Load data saat halaman dimuat
         window.onload = function() {
             loadData();
             loadSheetInfo();
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
         };
+        
+        // Fungsi untuk update date time
+        function updateDateTime() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                timeZone: 'Asia/Jakarta'
+            };
+            document.getElementById('currentDateTime').textContent = now.toLocaleDateString('id-ID', options);
+        }
         
         // Fungsi untuk load data dari Google Apps Script
         function loadData() {
@@ -436,128 +688,242 @@
             showLoading(false);
             
             if (!result.success) {
-                showError(result.message);
+                showError(result.message || 'Gagal memuat data');
                 return;
             }
             
-            // Simpan data
+            // Simpan data dan metadata
             originalData = result.data || [];
             filteredData = [...originalData];
-            headers = result.headers || { b: 'Kolom B', c: 'Kolom C' };
+            headers = result.headers || { b: 'Memo Keterlambatan', c: 'Result' };
+            metadata = result.metadata || {};
             
             // Update header
             document.getElementById('headerB').textContent = headers.b;
             document.getElementById('headerC').textContent = headers.c;
             
-            // Update last update
-            document.getElementById('lastUpdate').textContent = result.lastUpdated || new Date().toLocaleString();
-            
-            // Tampilkan data di tabel
-            renderTable(filteredData);
-            
             // Update stats
-            document.getElementById('totalRows').textContent = originalData.length;
-            document.getElementById('filterInfo').innerHTML = '';
+            document.getElementById('totalData').textContent = metadata.totalRows || originalData.length;
+            document.getElementById('filledData').textContent = metadata.filledRows || originalData.length;
+            document.getElementById('lastUpdate').textContent = metadata.lastUpdated || '-';
+            document.getElementById('sheetName').textContent = metadata.sheetName || 'MEMO KETERLAMBATAN';
+            
+            // Reset ke halaman pertama
+            currentPage = 1;
+            
+            // Tampilkan data
+            renderTable();
+            updatePagination();
+            
+            showToast('Data berhasil dimuat', 'success');
         }
         
         // Fungsi untuk menampilkan info sheet
         function displaySheetInfo(info) {
             if (info.success) {
-                const sheetInfo = document.getElementById('sheetInfo');
-                sheetInfo.innerHTML = `
-                    <div class="info-item">
-                        <i class="fas fa-spreadsheet"></i>
-                        <span>${info.spreadsheetName} - ${info.worksheetName}</span>
-                    </div>
-                    <div class="info-item">
-                        <i class="fas fa-clock"></i>
-                        <span id="lastUpdate">${info.lastUpdated}</span>
-                    </div>
-                `;
+                document.getElementById('spreadsheetName').textContent = info.spreadsheetInfo.name;
+                document.getElementById('activeSheet').textContent = info.sheetInfo.name;
             }
         }
         
-        // Fungsi untuk render tabel
-        function renderTable(data) {
+        // Fungsi untuk render tabel dengan pagination
+        function renderTable() {
             const tbody = document.getElementById('tableBody');
             
-            if (data.length === 0) {
+            if (filteredData.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="3" style="text-align: center; padding: 30px;">
-                            <i class="fas fa-search" style="font-size: 3em; color: #ccc; margin-bottom: 10px;"></i>
-                            <p>Tidak ada data ditemukan</p>
+                        <td colspan="3" style="text-align: center; padding: 50px;">
+                            <i class="fas fa-search" style="font-size: 3em; color: #ccc; margin-bottom: 15px;"></i>
+                            <p style="color: var(--gray);">Tidak ada data keterlambatan ditemukan</p>
                         </td>
                     </tr>
                 `;
                 return;
             }
             
+            // Hitung pagination
+            const start = (currentPage - 1) * rowsPerPage;
+            const end = Math.min(start + rowsPerPage, filteredData.length);
+            const pageData = filteredData.slice(start, end);
+            
             let html = '';
-            data.forEach((item, index) => {
-                const bValue = item.b || item[headers.b] || '';
-                const cValue = item.c || item[headers.c] || '';
+            pageData.forEach((item, index) => {
+                const rowNumber = start + index + 1;
+                const bValue = item.b || '';
+                const cValue = item.c || '';
                 
                 html += `
                     <tr>
-                        <td class="row-number">${index + 1}</td>
-                        <td>${bValue || '<span class="empty-data">- kosong -</span>'}</td>
-                        <td>${cValue || '<span class="empty-data">- kosong -</span>'}</td>
+                        <td class="row-number">${rowNumber}</td>
+                        <td>${bValue || '<span class="empty-data"><i class="fas fa-minus"></i> Kosong</span>'}</td>
+                        <td>${cValue || '<span class="empty-data"><i class="fas fa-minus"></i> Kosong</span>'}</td>
                     </tr>
                 `;
             });
             
             tbody.innerHTML = html;
+            
+            // Update info display
+            document.getElementById('displayInfo').innerHTML = 
+                `Menampilkan ${start + 1}-${end} dari ${filteredData.length} data`;
         }
         
         // Fungsi untuk filter data
-        function filterData() {
-            const searchText = document.getElementById('searchInput').value.toLowerCase();
-            
-            if (!searchText) {
-                filteredData = [...originalData];
-                document.getElementById('filterInfo').innerHTML = '';
-            } else {
-                filteredData = originalData.filter(item => {
-                    const bValue = (item.b || '').toLowerCase();
-                    const cValue = (item.c || '').toLowerCase();
-                    return bValue.includes(searchText) || cValue.includes(searchText);
-                });
+        function filterData(event) {
+            if (event.key === 'Enter' || event.type === 'click') {
+                const searchText = document.getElementById('searchInput').value.toLowerCase();
                 
-                document.getElementById('filterInfo').innerHTML = 
-                    `Menampilkan ${filteredData.length} dari ${originalData.length} data`;
+                if (!searchText) {
+                    filteredData = [...originalData];
+                } else {
+                    filteredData = originalData.filter(item => {
+                        const bValue = (item.b || '').toLowerCase();
+                        const cValue = (item.c || '').toLowerCase();
+                        return bValue.includes(searchText) || cValue.includes(searchText);
+                    });
+                }
+                
+                currentPage = 1;
+                renderTable();
+                updatePagination();
+                
+                showToast(`Ditemukan ${filteredData.length} data`, 'success');
             }
+        }
+        
+        // Fungsi untuk pagination
+        function updatePagination() {
+            const totalPages = Math.ceil(filteredData.length / rowsPerPage);
             
-            renderTable(filteredData);
+            document.getElementById('pageInfo').textContent = `Halaman ${currentPage} dari ${totalPages || 1}`;
+            document.getElementById('prevBtn').disabled = currentPage === 1;
+            document.getElementById('nextBtn').disabled = currentPage === totalPages || totalPages === 0;
+        }
+        
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                renderTable();
+                updatePagination();
+            }
+        }
+        
+        function nextPage() {
+            const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderTable();
+                updatePagination();
+            }
         }
         
         // Fungsi untuk export ke CSV
         function exportToCSV() {
             if (filteredData.length === 0) {
-                alert('Tidak ada data untuk diexport');
+                showToast('Tidak ada data untuk diexport', 'error');
                 return;
             }
             
             let csv = `${headers.b},${headers.c}\n`;
             
             filteredData.forEach(item => {
-                const bValue = (item.b || '').replace(/,/g, ';');
-                const cValue = (item.c || '').replace(/,/g, ';');
-                csv += `${bValue},${cValue}\n`;
+                const bValue = (item.b || '').replace(/,/g, ';').replace(/\n/g, ' ');
+                const cValue = (item.c || '').replace(/,/g, ';').replace(/\n/g, ' ');
+                csv += `"${bValue}","${cValue}"\n`;
             });
             
-            downloadFile(csv, 'data_google_sheets.csv', 'text/csv');
+            downloadFile(csv, 'memo_keterlambatan.csv', 'text/csv;charset=utf-8;');
+            showToast('Data berhasil diexport ke CSV', 'success');
         }
         
-        // Fungsi untuk export ke JSON
-        function exportToJSON() {
+        // Fungsi untuk export ke Excel (XLSX)
+        function exportToExcel() {
             if (filteredData.length === 0) {
-                alert('Tidak ada data untuk diexport');
+                showToast('Tidak ada data untuk diexport', 'error');
                 return;
             }
             
-            const json = JSON.stringify(filteredData, null, 2);
-            downloadFile(json, 'data_google_sheets.json', 'application/json');
+            // Buat HTML table untuk Excel
+            let html = `
+                <html>
+                    <head>
+                        <meta charset="UTF-8">
+                        <title>Memo Keterlambatan Result</title>
+                    </head>
+                    <body>
+                        <table border="1">
+                            <tr>
+                                <th>No</th>
+                                <th>${headers.b}</th>
+                                <th>${headers.c}</th>
+                            </tr>
+            `;
+            
+            filteredData.forEach((item, index) => {
+                html += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${item.b || ''}</td>
+                        <td>${item.c || ''}</td>
+                    </tr>
+                `;
+            });
+            
+            html += `</table></body></html>`;
+            
+            downloadFile(html, 'memo_keterlambatan.xls', 'application/vnd.ms-excel');
+            showToast('Data berhasil diexport ke Excel', 'success');
+        }
+        
+        // Fungsi untuk print data
+        function printData() {
+            const printWindow = window.open('', '_blank');
+            
+            let printContent = `
+                <html>
+                    <head>
+                        <title>Memo Keterlambatan Result</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; padding: 20px; }
+                            h1 { color: #4361ee; }
+                            table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+                            th { background: #4361ee; color: white; padding: 10px; }
+                            td { border: 1px solid #ddd; padding: 8px; }
+                            .footer { margin-top: 20px; color: #666; }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>Memo Keterlambatan Result</h1>
+                        <p>Tanggal: ${new Date().toLocaleDateString('id-ID')}</p>
+                        <table>
+                            <tr>
+                                <th>No</th>
+                                <th>${headers.b}</th>
+                                <th>${headers.c}</th>
+                            </tr>
+            `;
+            
+            filteredData.forEach((item, index) => {
+                printContent += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${item.b || '-'}</td>
+                        <td>${item.c || '-'}</td>
+                    </tr>
+                `;
+            });
+            
+            printContent += `
+                        </table>
+                        <p class="footer">Total data: ${filteredData.length}</p>
+                    </body>
+                </html>
+            `;
+            
+            printWindow.document.write(printContent);
+            printWindow.document.close();
+            printWindow.print();
         }
         
         // Fungsi untuk download file
@@ -579,13 +945,27 @@
         // Fungsi untuk show error
         function showError(message) {
             document.getElementById('error').style.display = 'flex';
-            document.getElementById('errorMessage').textContent = message || 'Terjadi kesalahan saat memuat data';
+            document.getElementById('errorMessage').textContent = message;
             showLoading(false);
         }
         
         // Fungsi untuk hide error
         function hideError() {
             document.getElementById('error').style.display = 'none';
+        }
+        
+        // Fungsi untuk show toast
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            
+            toast.className = `toast ${type}`;
+            toastMessage.textContent = message;
+            toast.style.display = 'flex';
+            
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
         }
         
         // Auto refresh setiap 5 menit
