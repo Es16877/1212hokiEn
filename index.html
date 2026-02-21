@@ -105,6 +105,24 @@ body {
     font-size: 0.8rem;
     color: #999;
     margin-top: 10px;
+    padding: 5px;
+}
+
+.memo-counter {
+    background: rgba(0,198,255,0.2);
+    color: #00c6ff;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    display: inline-block;
+    margin-bottom: 15px;
+}
+
+/* Style untuk konten kosong */
+.memo-content:empty::before {
+    content: "Tidak ada keterangan";
+    color: #999;
+    font-style: italic;
 }
 </style>
 </head>
@@ -122,6 +140,7 @@ body {
         </div>
         
         <div id="error-container" style="display: none;"></div>
+        <div id="memo-counter" class="memo-counter" style="display: none;"></div>
         <div id="memo-container"></div>
         
         <div id="timestamp" class="timestamp"></div>
@@ -142,6 +161,7 @@ function loadData(retryCount = 0) {
     document.getElementById("loading").style.display = "block";
     document.getElementById("error-container").style.display = "none";
     document.getElementById("memo-container").innerHTML = "";
+    document.getElementById("memo-counter").style.display = "none";
     
     // Gunakan fetch dengan timeout
     const controller = new AbortController();
@@ -183,7 +203,7 @@ function loadData(retryCount = 0) {
         const now = new Date();
         document.getElementById("timestamp").innerHTML = `Terakhir diperbarui: ${now.toLocaleString('id-ID')}`;
         
-        // Proses dan tampilkan data
+        // Proses dan tampilkan data (mulai dari baris 2 / index 1)
         displayData(data);
         
     })
@@ -208,10 +228,12 @@ function loadData(retryCount = 0) {
     });
 }
 
-// Fungsi untuk menampilkan data
+// Fungsi untuk menampilkan data (dimulai dari baris 2 / index 1)
 function displayData(data) {
     const container = document.getElementById("memo-container");
+    const counterEl = document.getElementById("memo-counter");
     let html = "";
+    let memoCount = 0;
     
     // Cek apakah data adalah array
     if (!Array.isArray(data)) {
@@ -226,33 +248,64 @@ function displayData(data) {
         }
     }
     
-    // Filter data yang valid
-    const validData = data.filter(row => row && row[1] && row[1].trim() !== "");
+    // Proses data dari baris 2 (index 1) sampai bawah
+    // Asumsi: 
+    // - Baris 1 (index 0) adalah header
+    // - Baris 2 (index 1) sampai seterusnya adalah data
+    // - Kolom B (index 1) = JUDUL
+    // - Kolom C (index 2) = KETERANGAN
     
-    if (validData.length === 0) {
-        container.innerHTML = '<div class="empty-message">Tidak ada memo tersedia</div>';
-        return;
+    for (let i = 1; i < data.length; i++) { // Mulai dari index 1 (baris 2)
+        const row = data[i];
+        
+        // Pastikan row adalah array dan memiliki minimal 3 kolom
+        if (!Array.isArray(row) || row.length < 3) {
+            console.warn(`Baris ${i+1} tidak valid:`, row);
+            continue;
+        }
+        
+        // Ambil data dari kolom B (index 1) dan kolom C (index 2)
+        const judul = row[1] || ""; // Kolom B
+        const keterangan = row[2] || ""; // Kolom C
+        
+        // Hanya tampilkan jika judul tidak kosong
+        if (judul.trim() !== "") {
+            memoCount++;
+            
+            html += `
+                <div class="mb-4 memo-item" data-row="${i+1}">
+                    <div class="memo-title">${escapeHtml(judul)}</div>
+                    <div class="memo-content">${formatKeterangan(escapeHtml(keterangan))}</div>
+                </div>
+            `;
+        }
     }
     
-    // Tampilkan setiap memo
-    validData.forEach((row, index) => {
-        const judul = escapeHtml(row[1] || "Tanpa Judul");
-        const isi = escapeHtml(row[2] || "Tidak ada konten");
-        
-        html += `
-            <div class="mb-4 animate__animated animate__fadeIn" style="animation: fadeIn 0.5s ease ${index * 0.1}s">
-                <div class="memo-title">${judul}</div>
-                <div class="memo-content">${formatContent(isi)}</div>
-            </div>
-        `;
-    });
-    
-    container.innerHTML = html;
+    // Tampilkan counter jika ada memo
+    if (memoCount > 0) {
+        counterEl.style.display = "inline-block";
+        counterEl.innerHTML = `<i class="bi bi-envelope-paper"></i> Total Memo: ${memoCount}`;
+        container.innerHTML = html;
+    } else {
+        counterEl.style.display = "none";
+        container.innerHTML = '<div class="empty-message">Tidak ada memo tersedia</div>';
+    }
 }
 
-// Fungsi untuk memformat konten (ganti newline dengan <br>)
-function formatContent(text) {
-    return text.replace(/\n/g, '<br>');
+// Fungsi khusus untuk format keterangan
+function formatKeterangan(text) {
+    if (!text || text.trim() === "") {
+        return '<span style="color: #999; font-style: italic;">Tidak ada keterangan</span>';
+    }
+    
+    // Ganti newline dengan <br>
+    let formatted = text.replace(/\n/g, '<br>');
+    
+    // Deteksi jika ada link
+    const urlPattern = /(https?:\/\/[^\s]+)/g;
+    formatted = formatted.replace(urlPattern, '<a href="$1" target="_blank" style="color: #0072ff;">$1</a>');
+    
+    return formatted;
 }
 
 // Fungsi untuk mengamankan HTML
@@ -271,10 +324,11 @@ function showError(message) {
     errorContainer.style.display = "block";
     errorContainer.innerHTML = `
         <div class="error-message">
+            <i class="bi bi-exclamation-triangle-fill"></i><br>
             <strong>Error!</strong><br>
             ${message}<br>
             <button onclick="loadData()" class="retry-button">
-                Coba Lagi
+                <i class="bi bi-arrow-repeat"></i> Coba Lagi
             </button>
         </div>
     `;
@@ -286,27 +340,31 @@ function showRetryButton() {
     errorContainer.style.display = "block";
     errorContainer.innerHTML = `
         <div class="error-message">
+            <i class="bi bi-wifi-off"></i><br>
             <strong>Gagal terhubung setelah ${MAX_RETRIES} kali percobaan.</strong><br>
             <button onclick="loadData()" class="retry-button">
-                Muat Ulang Manual
+                <i class="bi bi-arrow-repeat"></i> Muat Ulang Manual
             </button>
         </div>
     `;
 }
 
-// Fallback data jika API bermasalah (untuk testing)
-const FALLBACK_DATA = [
-    ["", "Memo Penting #1", "Ini adalah isi memo pertama yang bisa Anda gunakan untuk testing tampilan."],
-    ["", "Pengumuman Hasil", "Hasil pemeriksaan akan diumumkan pada hari Jumat, 22 Februari 2026."],
-    ["", "Informasi Teknis", "Jika terjadi kendala teknis, silakan hubungi tim IT support."]
+// Data contoh untuk testing (sesuai format: baris 1 header, baris 2+ data)
+const SAMPLE_DATA = [
+    ["No", "JUDUL", "KETERANGAN", "Tanggal"], // Baris 1 (header) - akan di-skip
+    ["", "Memo Penting #1", "Ini adalah keterangan untuk memo pertama.\nIni baris baru.\nhttps://example.com"], // Baris 2
+    ["", "Pengumuman Hasil", "Hasil pemeriksaan akan diumumkan pada hari Jumat, 22 Februari 2026.\n\nHarap persiapkan dokumen pendukung."], // Baris 3
+    ["", "Informasi Teknis", "Jika terjadi kendala teknis, silakan hubungi tim IT support di:\nEmail: support@example.com\nTelp: 021-1234567"], // Baris 4
+    ["", "", "Ini tidak akan tampil karena judul kosong"], // Baris 5 - tidak akan tampil
+    ["", "Memo Terakhir", "Testing dengan link: https://google.com"] // Baris 6
 ];
 
-// Fungsi untuk menggunakan data cadangan
-function useFallbackData() {
-    console.log('Menggunakan data cadangan');
+// Fungsi untuk menggunakan data sample (untuk testing)
+function useSampleData() {
+    console.log('Menggunakan data sample untuk testing');
     document.getElementById("loading").style.display = "none";
-    document.getElementById("timestamp").innerHTML = "Menampilkan data cadangan (offline mode)";
-    displayData(FALLBACK_DATA);
+    document.getElementById("timestamp").innerHTML = "Menampilkan data sample (mode testing)";
+    displayData(SAMPLE_DATA);
 }
 
 // Tambahkan animasi CSS
@@ -316,29 +374,47 @@ style.textContent = `
         from { opacity: 0; transform: translateY(20px); }
         to { opacity: 1; transform: translateY(0); }
     }
+    
+    .memo-item {
+        animation: fadeIn 0.5s ease forwards;
+        opacity: 0;
+    }
+    
+    .memo-content a {
+        text-decoration: none;
+    }
+    
+    .memo-content a:hover {
+        text-decoration: underline;
+    }
+    
+    .bi {
+        margin-right: 5px;
+    }
 `;
 document.head.appendChild(style);
 
 // Panggil fungsi saat halaman dimuat
 document.addEventListener('DOMContentLoaded', () => {
+    // Coba ambil data dari API
     loadData();
     
-    // Opsional: Gunakan fallback jika API bermasalah setelah 5 detik
+    // Opsional: Gunakan sample data jika API bermasalah setelah 5 detik
     setTimeout(() => {
         if (document.getElementById("loading").style.display !== "none") {
-            console.log('Timeout fallback activated');
-            useFallbackData();
+            console.log('Menggunakan sample data (timeout)');
+            useSampleData();
         }
     }, 15000); // 15 detik fallback
 });
 
-// Tambahkan event listener untuk retry manual
+// Ekspos fungsi ke global
 window.loadData = loadData;
-window.useFallbackData = useFallbackData;
+window.useSampleData = useSampleData;
 
 </script>
 
-<!-- Optional: Tambahkan Bootstrap Icons -->
+<!-- Bootstrap Icons -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
 </body>
