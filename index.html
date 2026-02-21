@@ -12,6 +12,7 @@ body {
     background: linear-gradient(135deg,#141e30,#243b55);
     color: white;
     font-family: 'Segoe UI', sans-serif;
+    min-height: 100vh;
 }
 
 .card-custom {
@@ -19,26 +20,91 @@ body {
     backdrop-filter: blur(10px);
     border-radius: 15px;
     padding: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
 }
 
 .memo-title {
-    background: #00c6ff;
-    color: black;
+    background: linear-gradient(135deg, #00c6ff, #0072ff);
+    color: white;
     font-weight: bold;
-    padding: 10px;
+    padding: 12px 20px;
     border-radius: 8px 8px 0 0;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .memo-content {
-    background: #f8f9fa;
-    color: black;
-    padding: 15px;
+    background: white;
+    color: #333;
+    padding: 20px;
     border-radius: 0 0 8px 8px;
+    line-height: 1.6;
+    font-size: 1rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
 .loading {
     text-align: center;
+    padding: 40px;
+    font-size: 1.2rem;
+    color: #00c6ff;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid rgba(255,255,255,0.1);
+    border-top: 5px solid #00c6ff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.error-message {
+    background: rgba(255,0,0,0.1);
+    border: 1px solid #ff4444;
+    color: #ff4444;
     padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.empty-message {
+    text-align: center;
+    padding: 40px;
+    color: #999;
+    font-style: italic;
+}
+
+.retry-button {
+    background: #00c6ff;
+    color: white;
+    border: none;
+    padding: 10px 30px;
+    border-radius: 25px;
+    margin-top: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.retry-button:hover {
+    background: #0072ff;
+    transform: scale(1.05);
+}
+
+.timestamp {
+    text-align: right;
+    font-size: 0.8rem;
+    color: #999;
+    margin-top: 10px;
 }
 </style>
 </head>
@@ -46,59 +112,234 @@ body {
 
 <div class="container py-5">
     <div class="card card-custom shadow-lg">
-        <h3 class="text-center mb-4">MEMO KETERLAMBATAN RESULT</h3>
+        <h3 class="text-center mb-4">
+            <span style="border-bottom: 3px solid #00c6ff; padding-bottom: 5px;">MEMO KETERLAMBATAN RESULT</span>
+        </h3>
 
-        <div id="loading" class="loading">Memuat data...</div>
+        <div id="loading" class="loading">
+            <div class="loading-spinner"></div>
+            Memuat data...
+        </div>
+        
+        <div id="error-container" style="display: none;"></div>
         <div id="memo-container"></div>
-
+        
+        <div id="timestamp" class="timestamp"></div>
     </div>
 </div>
 
 <script>
-
+// Konfigurasi
 const API_URL = "https://script.google.com/macros/s/AKfycbw_-zPBaCJBCsIJ5grX3fyoexEm_jrkNP9GL7B7PQETFtfNRpp_dYR0GP0zJQmOw04/exec";
+const MAX_RETRIES = 3;
+const RETRY_DELAY = 2000; // 2 detik
 
-function loadData() {
-    fetch(API_URL)
-    .then(res => res.json())
-    .then(data => {
-
-        document.getElementById("loading").style.display = "none";
-
-        let html = "";
-
-        data.forEach(row => {
-
-            // Karena ini format array (bukan object)
-            // Kolom B = index 1
-            // Kolom C = index 2
-
-            const judul = row[1] || "";
-            const isi = row[2] || "";
-
-            if(judul.trim() !== "") {
-                html += `
-                    <div class="mb-4">
-                        <div class="memo-title">${judul}</div>
-                        <div class="memo-content">${isi}</div>
-                    </div>
-                `;
-            }
-
-        });
-
-        document.getElementById("memo-container").innerHTML = html;
-
+// Fungsi utama dengan retry mechanism
+function loadData(retryCount = 0) {
+    console.log(`Mencoba mengambil data... (Percobaan ke-${retryCount + 1})`);
+    
+    // Tampilkan loading
+    document.getElementById("loading").style.display = "block";
+    document.getElementById("error-container").style.display = "none";
+    document.getElementById("memo-container").innerHTML = "";
+    
+    // Gunakan fetch dengan timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // Timeout 10 detik
+    
+    fetch(API_URL, {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        signal: controller.signal
     })
-    .catch(err => {
-        document.getElementById("loading").innerHTML = "Gagal mengambil data!";
-        console.error(err);
+    .then(response => {
+        clearTimeout(timeoutId);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.text(); // Ambil sebagai text dulu
+    })
+    .then(text => {
+        console.log('Response mentah:', text.substring(0, 200) + '...'); // Log sebagian
+        
+        // Coba parse JSON
+        let data;
+        try {
+            data = JSON.parse(text);
+        } catch (e) {
+            console.error('Gagal parse JSON:', e);
+            throw new Error('Data bukan format JSON yang valid');
+        }
+        
+        // Sembunyikan loading
+        document.getElementById("loading").style.display = "none";
+        
+        // Tampilkan timestamp
+        const now = new Date();
+        document.getElementById("timestamp").innerHTML = `Terakhir diperbarui: ${now.toLocaleString('id-ID')}`;
+        
+        // Proses dan tampilkan data
+        displayData(data);
+        
+    })
+    .catch(error => {
+        clearTimeout(timeoutId);
+        console.error('Error detail:', error);
+        
+        if (error.name === 'AbortError') {
+            showError('Koneksi timeout. Server tidak merespons.');
+        } else {
+            showError(`Gagal mengambil data: ${error.message}`);
+        }
+        
+        // Coba ulang jika masih dalam batas percobaan
+        if (retryCount < MAX_RETRIES) {
+            console.log(`Mencoba ulang dalam ${RETRY_DELAY/1000} detik...`);
+            setTimeout(() => loadData(retryCount + 1), RETRY_DELAY);
+        } else {
+            // Tampilkan tombol coba manual
+            showRetryButton();
+        }
     });
 }
 
-loadData();
+// Fungsi untuk menampilkan data
+function displayData(data) {
+    const container = document.getElementById("memo-container");
+    let html = "";
+    
+    // Cek apakah data adalah array
+    if (!Array.isArray(data)) {
+        console.warn('Data bukan array:', data);
+        
+        // Coba cek apakah data memiliki properti data
+        if (data && data.data && Array.isArray(data.data)) {
+            data = data.data;
+        } else {
+            container.innerHTML = '<div class="empty-message">Format data tidak sesuai</div>';
+            return;
+        }
+    }
+    
+    // Filter data yang valid
+    const validData = data.filter(row => row && row[1] && row[1].trim() !== "");
+    
+    if (validData.length === 0) {
+        container.innerHTML = '<div class="empty-message">Tidak ada memo tersedia</div>';
+        return;
+    }
+    
+    // Tampilkan setiap memo
+    validData.forEach((row, index) => {
+        const judul = escapeHtml(row[1] || "Tanpa Judul");
+        const isi = escapeHtml(row[2] || "Tidak ada konten");
+        
+        html += `
+            <div class="mb-4 animate__animated animate__fadeIn" style="animation: fadeIn 0.5s ease ${index * 0.1}s">
+                <div class="memo-title">${judul}</div>
+                <div class="memo-content">${formatContent(isi)}</div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
+
+// Fungsi untuk memformat konten (ganti newline dengan <br>)
+function formatContent(text) {
+    return text.replace(/\n/g, '<br>');
+}
+
+// Fungsi untuk mengamankan HTML
+function escapeHtml(text) {
+    if (!text) return "";
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// Fungsi untuk menampilkan error
+function showError(message) {
+    document.getElementById("loading").style.display = "none";
+    
+    const errorContainer = document.getElementById("error-container");
+    errorContainer.style.display = "block";
+    errorContainer.innerHTML = `
+        <div class="error-message">
+            <strong>Error!</strong><br>
+            ${message}<br>
+            <button onclick="loadData()" class="retry-button">
+                Coba Lagi
+            </button>
+        </div>
+    `;
+}
+
+// Fungsi untuk menampilkan tombol retry
+function showRetryButton() {
+    const errorContainer = document.getElementById("error-container");
+    errorContainer.style.display = "block";
+    errorContainer.innerHTML = `
+        <div class="error-message">
+            <strong>Gagal terhubung setelah ${MAX_RETRIES} kali percobaan.</strong><br>
+            <button onclick="loadData()" class="retry-button">
+                Muat Ulang Manual
+            </button>
+        </div>
+    `;
+}
+
+// Fallback data jika API bermasalah (untuk testing)
+const FALLBACK_DATA = [
+    ["", "Memo Penting #1", "Ini adalah isi memo pertama yang bisa Anda gunakan untuk testing tampilan."],
+    ["", "Pengumuman Hasil", "Hasil pemeriksaan akan diumumkan pada hari Jumat, 22 Februari 2026."],
+    ["", "Informasi Teknis", "Jika terjadi kendala teknis, silakan hubungi tim IT support."]
+];
+
+// Fungsi untuk menggunakan data cadangan
+function useFallbackData() {
+    console.log('Menggunakan data cadangan');
+    document.getElementById("loading").style.display = "none";
+    document.getElementById("timestamp").innerHTML = "Menampilkan data cadangan (offline mode)";
+    displayData(FALLBACK_DATA);
+}
+
+// Tambahkan animasi CSS
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+`;
+document.head.appendChild(style);
+
+// Panggil fungsi saat halaman dimuat
+document.addEventListener('DOMContentLoaded', () => {
+    loadData();
+    
+    // Opsional: Gunakan fallback jika API bermasalah setelah 5 detik
+    setTimeout(() => {
+        if (document.getElementById("loading").style.display !== "none") {
+            console.log('Timeout fallback activated');
+            useFallbackData();
+        }
+    }, 15000); // 15 detik fallback
+});
+
+// Tambahkan event listener untuk retry manual
+window.loadData = loadData;
+window.useFallbackData = useFallbackData;
 
 </script>
+
+<!-- Optional: Tambahkan Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
 </body>
 </html>
