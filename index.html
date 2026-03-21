@@ -20,7 +20,6 @@
       background: #0a0f1a;
     }
 
-    /* Background dengan overlay yang lebih halus */
     body::before {
       content: '';
       position: fixed;
@@ -56,7 +55,7 @@
       z-index: 1;
     }
 
-    /* Header lebih elegan */
+    /* Header Section */
     .header-section {
       margin-bottom: 32px;
       display: flex;
@@ -130,7 +129,7 @@
       font-size: 0.9rem;
     }
 
-    /* Search bar lebih minimalis */
+    /* Search Section */
     .search-section {
       margin-bottom: 28px;
     }
@@ -192,12 +191,12 @@
       border: 1px solid rgba(255, 180, 70, 0.3);
     }
 
-    /* Tabel dengan desain lebih rapi */
+    /* Table Wrapper */
     .table-wrapper {
       background: rgba(15, 25, 40, 0.5);
       backdrop-filter: blur(12px);
       border-radius: 24px;
-      overflow: hidden;
+      overflow-x: auto;
       border: 1px solid rgba(255, 215, 150, 0.2);
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     }
@@ -206,7 +205,7 @@
       width: 100%;
       border-collapse: collapse;
       font-size: 0.85rem;
-      min-width: 1000px;
+      min-width: 800px;
     }
 
     .schedule-table th {
@@ -236,32 +235,18 @@
       background: rgba(255, 215, 150, 0.08);
     }
 
-    /* Logo & Nama Pasaran */
+    /* Market Cell - Tanpa Logo */
     .market-cell {
       display: flex;
       align-items: center;
       gap: 12px;
     }
 
-    .market-logo {
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-      object-fit: cover;
-      background: rgba(0, 0, 0, 0.4);
-      padding: 6px;
-      border: 1px solid rgba(255, 215, 150, 0.3);
-      transition: transform 0.2s;
-    }
-
-    .market-logo:hover {
-      transform: scale(1.05);
-    }
-
     .market-name {
       font-weight: 700;
       color: #FFE5B4;
       font-size: 0.9rem;
+      line-height: 1.3;
     }
 
     /* Badge Hari */
@@ -283,7 +268,7 @@
       border-color: rgba(255, 120, 50, 0.4);
     }
 
-    /* Waktu */
+    /* Time Badge */
     .time-badge {
       display: inline-flex;
       align-items: center;
@@ -421,11 +406,6 @@
         padding: 12px 12px;
       }
       
-      .market-logo {
-        width: 32px;
-        height: 32px;
-      }
-      
       .btn-link {
         padding: 4px 10px;
         font-size: 0.65rem;
@@ -471,11 +451,11 @@
     <table class="schedule-table">
       <thead>
         <tr>
-          <th style="width: 28%">PASARAN</th>
-          <th style="width: 18%">JADWAL OPERASIONAL</th>
+          <th style="width: 30%">PASARAN</th>
+          <th style="width: 20%">JADWAL OPERASIONAL</th>
           <th style="width: 16%">JAM TUTUP</th>
           <th style="width: 16%">RESULT / DRAW</th>
-          <th style="width: 22%">AKSES CEPAT</th>
+          <th style="width: 18%">AKSES CEPAT</th>
         </tr>
       </thead>
       <tbody id="tableBody">
@@ -495,55 +475,55 @@
 </div>
 
 <script>
-  // Data Pasaran Lengkap
+  // Data Pasaran Lengkap (tanpa properti logo)
   const marketData = [
-    { nama: "HOKIDRAW", hari: "Senin - Minggu", tutup: "Setiap Jam", buka: "1 Jam Sekali", urlResult: "https://hokidraw.com/", liveDraw: "https://www.youtube.com/@hokidraw-official", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/HKDW/icon/icon.png" },
-    { nama: "TOTO MACAU PAGI", hari: "Senin - Minggu", tutup: "00:00 WIB", buka: "00:15 WIB", urlResult: "https://totomacaunew.us/", liveDraw: "https://kick.com/live-ttm4d", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/TTM6/icon/icon.png" },
-    { nama: "KENTUCKY MIDDAY", hari: "Senin - Minggu", tutup: "00:05 WIB", buka: "00:20 WIB", urlResult: "https://play.kylottery.com/en-us/playnow/pick4.html", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/KTM/icon/icon.png" },
-    { nama: "FLORIDA MIDDAY", hari: "Senin - Minggu", tutup: "00:20 WIB", buka: "00:30 WIB", urlResult: "https://floridalottery.com/games/draw-games/pick-4", liveDraw: "https://www.youtube.com/@floridalottery", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/FLM/icon/icon.png" },
-    { nama: "HUAHIN 0100", hari: "Senin - Minggu", tutup: "00:45 WIB", buka: "01:00 WIB", urlResult: "https://huahinlottery.com/", liveDraw: "https://www.youtube.com/@huahinlottery5727", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/HUA03/icon/icon.png" },
-    { nama: "BANGKOK 0130", hari: "Senin - Minggu", tutup: "01:15 WIB", buka: "01:30 WIB", urlResult: "https://bangkokpoolstoday.com", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/BKK02/icon/icon.png" },
-    { nama: "NEW YORK MIDDAY", hari: "Senin - Minggu", tutup: "01:15 WIB", buka: "01:25 WIB", urlResult: "https://nylottery.ny.gov/", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/NYM/icon/icon.png" },
-    { nama: "NORTH CAROLINA DAY", hari: "Senin - Minggu", tutup: "01:45 WIB", buka: "02:00 WIB", urlResult: "https://www.wral.com/entertainment/lottery/", liveDraw: "https://www.wral.com/evening-pick-3-pick-4-and-cash-5/1075494/", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/NCD/icon/icon.png" },
-    { nama: "BRUNEI 02", hari: "Senin - Minggu", tutup: "02:30 WIB", buka: "02:45 WIB", urlResult: "https://bruneipools.com/", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/BRU14/icon/icon.png" },
-    { nama: "OREGON 03", hari: "Senin - Minggu", tutup: "02:50 WIB", buka: "03:00 WIB", urlResult: "https://www.oregonlottery.org/pick-4/winning-numbers/", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/ORG03/icon/icon.png" },
-    { nama: "OREGON 06", hari: "Senin - Minggu", tutup: "05:50 WIB", buka: "06:00 WIB", urlResult: "https://www.oregonlottery.org/pick-4/winning-numbers/", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/ORG03/icon/icon.png" },
-    { nama: "CALIFORNIA", hari: "Senin - Minggu", tutup: "08:25 WIB", buka: "08:30 WIB", urlResult: "https://www.calottery.com/en/draw-games/daily-4", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/CLF/icon/icon.png" },
-    { nama: "FLORIDA EVENING", hari: "Senin - Minggu", tutup: "08:35 WIB", buka: "08:45 WIB", urlResult: "https://floridalottery.com/games/draw-games/pick-4", liveDraw: "https://www.youtube.com/@floridalottery", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/FLE/icon/icon.png" },
-    { nama: "OREGON 09", hari: "Senin - Minggu", tutup: "08:50 WIB", buka: "09:00 WIB", urlResult: "https://www.oregonlottery.org/pick-4/winning-numbers/", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/ORG03/icon/icon.png" },
-    { nama: "BANGKOK 0930", hari: "Senin - Minggu", tutup: "09:15 WIB", buka: "09:30 WIB", urlResult: "https://bangkokpoolstoday.com", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/BKK02/icon/icon.png" },
-    { nama: "NEW YORK EVENING", hari: "Senin - Minggu", tutup: "09:25 WIB", buka: "09:35 WIB", urlResult: "https://nylottery.ny.gov/", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/NYE/icon/icon.png" },
-    { nama: "KENTUCKY EVENING", hari: "Senin - Minggu", tutup: "09:45 WIB", buka: "10:00 WIB", urlResult: "https://play.kylottery.com/en-us/playnow/pick4.html", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/KTE/icon/icon.png" },
-    { nama: "CAROLINA EVENING", hari: "Senin - Minggu", tutup: "10:17 WIB", buka: "10:22 WIB", urlResult: "https://www.wral.com/evening-pick-3-pick-4-and-cash-5/1075494/", liveDraw: "https://www.wral.com/evening-pick-3-pick-4-and-cash-5/1075494/", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/NCD2/icon/icon.png" },
-    { nama: "TOTO CAMBODIA", hari: "Senin - Minggu", tutup: "10:45 WIB", buka: "11:00 WIB", urlResult: "https://totocambodialive.com/index.html", liveDraw: "https://www.youtube.com/@TotoCambodiaOfficial", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/TTC/icon/icon.png" },
-    { nama: "CHELSEA 11", hari: "Senin - Minggu", tutup: "11:00 WIB", buka: "11:15 WIB", urlResult: "https://chelseapools.co.uk/", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/CHS11/icon/icon.png" },
-    { nama: "OREGON 12", hari: "Senin - Minggu", tutup: "11:50 WIB", buka: "12:00 WIB", urlResult: "https://www.oregonlottery.org/pick-4/winning-numbers/", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/ORG03/icon/icon.png" },
-    { nama: "POIPET 12", hari: "Senin - Minggu", tutup: "12:15 WIB", buka: "12:30 WIB", urlResult: "https://poipetlottery.com/", liveDraw: "https://poipetlottery.com/liveresult", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/PPT19/icon/icon.png" },
-    { nama: "TOTO MACAU SIANG", hari: "Senin - Minggu", tutup: "13:00 WIB", buka: "13:15 WIB", urlResult: "https://totomacaunew.us/", liveDraw: "https://kick.com/live-ttm4d", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/TTM6/icon/icon.png" },
-    { nama: "BULLSEYE", hari: "Senin - Minggu", tutup: "12:00 WIB", buka: "12:15 WIB", urlResult: "https://mylotto.co.nz/results/bullseye", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/BLE/icon/icon.png" },
-    { nama: "SYDNEY", hari: "Senin - Minggu", tutup: "13:49 WIB", buka: "14:05 WIB", urlResult: "https://lottosydney.fun/", liveDraw: "https://kick.com/sydney-lotto-official", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/SYDLT/icon/icon.png" },
-    { nama: "JAKARTA POOLS", hari: "Senin - Minggu", tutup: "14:00 WIB", buka: "14:15 WIB", urlResult: "https://www.jakartapool.com/", liveDraw: "https://kick.com/studio-live-game", logo: "https://cdn.areabermain.club/assets/cdn/az4/2025/08/18/20250818/57824d39d3564ef0ebad1b4297693dc9/logo-jakarta-pools-jpg.png" },
-    { nama: "BRUNEI 14", hari: "Senin - Minggu", tutup: "14:30 WIB", buka: "14:45 WIB", urlResult: "https://bruneipools.com/", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/BRU14/icon/icon.png" },
-    { nama: "CHELSEA 15", hari: "Senin - Minggu", tutup: "15:00 WIB", buka: "15:15 WIB", urlResult: "https://chelseapools.co.uk/", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/CHS11/icon/icon.png" },
-    { nama: "POIPET 15", hari: "Senin - Minggu", tutup: "15:15 WIB", buka: "15:30 WIB", urlResult: "https://poipetlottery.com/", liveDraw: "https://poipetlottery.com/liveresult", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/PPT19/icon/icon.png" },
-    { nama: "TOTOMALI", hari: "Senin - Minggu", tutup: "15:15 WIB", buka: "15:30 WIB", urlResult: "https://totomali.com/", liveDraw: "https://totomali.com/live-draw.html", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/MALI15/icon/icon.png" },
-    { nama: "TOTO MACAU SORE", hari: "Senin - Minggu", tutup: "16:00 WIB", buka: "16:15 WIB", urlResult: "https://totomacaunew.us/", liveDraw: "https://kick.com/live-ttm4d", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/TTM6/icon/icon.png" },
-    { nama: "HUAHIN 1630", hari: "Senin - Minggu", tutup: "16:15 WIB", buka: "16:30 WIB", urlResult: "https://huahinlottery.com/", liveDraw: "https://www.youtube.com/@huahinlottery5727", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/HUA03/icon/icon.png" },
-    { nama: "KING KONG 4D", hari: "Senin - Minggu", tutup: "17:00 WIB", buka: "17:15 WIB", urlResult: "https://kingkongpools.id/", liveDraw: "https://kick.com/king-kong-pools", logo: "https://cdn.areabermain.club/assets/cdn/az4/2025/08/18/20250818/32f87d6c932b0d2eee9b6e1c9028ab41/logo-2.png" },
-    { nama: "SINGAPORE", hari: "Selasa & Jumat Libur", tutup: "17:30 WIB", buka: "17:45 WIB", urlResult: "https://www.singaporepools.com.sg/landing/en/Pages/index.html", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/SGD/icon/icon.png" },
-    { nama: "MAGNUM 4D", hari: "Rabu, Sabtu, Minggu", tutup: "18:10 WIB", buka: "18:40 WIB", urlResult: "https://www.magnum4d.my/en/", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/MAG/icon/icon.png" },
-    { nama: "CHELSEA 19", hari: "Senin - Minggu", tutup: "19:00 WIB", buka: "19:15 WIB", urlResult: "https://chelseapools.co.uk/", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/CHS11/icon/icon.png" },
-    { nama: "TOTO MACAU MALAM", hari: "Senin - Minggu", tutup: "19:00 WIB", buka: "19:15 WIB", urlResult: "https://totomacaunew.us/", liveDraw: "https://kick.com/live-ttm4d", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/TTM6/icon/icon.png" },
-    { nama: "POIPET 19", hari: "Senin - Minggu", tutup: "19:30 WIB", buka: "19:45 WIB", urlResult: "https://poipetlottery.com/", liveDraw: "https://poipetlottery.com/liveresult", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/PPT19/icon/icon.png" },
-    { nama: "PCSO", hari: "Minggu Libur", tutup: "19:50 WIB", buka: "20:10 WIB", urlResult: "https://www.pcso.gov.ph/", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/PCO/icon/icon.png" },
-    { nama: "HUAHIN 2100", hari: "Senin - Minggu", tutup: "20:45 WIB", buka: "21:00 WIB", urlResult: "https://huahinlottery.com/", liveDraw: "https://www.youtube.com/@huahinlottery5727", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/HUA03/icon/icon.png" },
-    { nama: "CHELSEA 21", hari: "Senin - Minggu", tutup: "21:00 WIB", buka: "21:15 WIB", urlResult: "https://chelseapools.co.uk/", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/CHS11/icon/icon.png" },
-    { nama: "NEVADA", hari: "Senin - Minggu", tutup: "21:15 WIB", buka: "21:30 WIB", urlResult: "https://www.nevadalottery.us/", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/NVD/icon/icon.png" },
-    { nama: "BRUNEI 21", hari: "Senin - Minggu", tutup: "21:30 WIB", buka: "21:45 WIB", urlResult: "https://bruneipools.com/", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/BRU14/icon/icon.png" },
-    { nama: "TOTO MACAU MALAM II", hari: "Senin - Minggu", tutup: "22:00 WIB", buka: "22:15 WIB", urlResult: "https://totomacaunew.us/", liveDraw: "https://kick.com/live-ttm4d", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/TTM6/icon/icon.png" },
-    { nama: "POIPET 22", hari: "Senin - Minggu", tutup: "22:30 WIB", buka: "22:45 WIB", urlResult: "https://poipetlottery.com/", liveDraw: "https://poipetlottery.com/liveresult", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/PPT19/icon/icon.png" },
-    { nama: "HONGKONG", hari: "Senin - Minggu", tutup: "22:59 WIB", buka: "23:15 WIB", urlResult: "https://hongkonglotto.today", liveDraw: "https://kick.com/hongkong-lotto-official", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/HKGLT/icon/icon.png" },
-    { nama: "TOTO MACAU MALAM III", hari: "Senin - Minggu", tutup: "23:00 WIB", buka: "23:15 WIB", urlResult: "https://totomacaunew.us/", liveDraw: "https://kick.com/live-ttm4d", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/TTM6/icon/icon.png" }
+    { nama: "HOKIDRAW", hari: "Senin - Minggu", tutup: "Setiap Jam", buka: "1 Jam Sekali", urlResult: "https://hokidraw.com/", liveDraw: "https://www.youtube.com/@hokidraw-official" },
+    { nama: "TOTO MACAU PAGI", hari: "Senin - Minggu", tutup: "00:00 WIB", buka: "00:15 WIB", urlResult: "https://totomacaunew.us/", liveDraw: "https://kick.com/live-ttm4d" },
+    { nama: "KENTUCKY MIDDAY", hari: "Senin - Minggu", tutup: "00:05 WIB", buka: "00:20 WIB", urlResult: "https://play.kylottery.com/en-us/playnow/pick4.html", liveDraw: null },
+    { nama: "FLORIDA MIDDAY", hari: "Senin - Minggu", tutup: "00:20 WIB", buka: "00:30 WIB", urlResult: "https://floridalottery.com/games/draw-games/pick-4", liveDraw: "https://www.youtube.com/@floridalottery" },
+    { nama: "HUAHIN 0100", hari: "Senin - Minggu", tutup: "00:45 WIB", buka: "01:00 WIB", urlResult: "https://huahinlottery.com/", liveDraw: "https://www.youtube.com/@huahinlottery5727" },
+    { nama: "BANGKOK 0130", hari: "Senin - Minggu", tutup: "01:15 WIB", buka: "01:30 WIB", urlResult: "https://bangkokpoolstoday.com", liveDraw: null },
+    { nama: "NEW YORK MIDDAY", hari: "Senin - Minggu", tutup: "01:15 WIB", buka: "01:25 WIB", urlResult: "https://nylottery.ny.gov/", liveDraw: null },
+    { nama: "NORTH CAROLINA DAY", hari: "Senin - Minggu", tutup: "01:45 WIB", buka: "02:00 WIB", urlResult: "https://www.wral.com/entertainment/lottery/", liveDraw: "https://www.wral.com/evening-pick-3-pick-4-and-cash-5/1075494/" },
+    { nama: "BRUNEI 02", hari: "Senin - Minggu", tutup: "02:30 WIB", buka: "02:45 WIB", urlResult: "https://bruneipools.com/", liveDraw: null },
+    { nama: "OREGON 03", hari: "Senin - Minggu", tutup: "02:50 WIB", buka: "03:00 WIB", urlResult: "https://www.oregonlottery.org/pick-4/winning-numbers/", liveDraw: null },
+    { nama: "OREGON 06", hari: "Senin - Minggu", tutup: "05:50 WIB", buka: "06:00 WIB", urlResult: "https://www.oregonlottery.org/pick-4/winning-numbers/", liveDraw: null },
+    { nama: "CALIFORNIA", hari: "Senin - Minggu", tutup: "08:25 WIB", buka: "08:30 WIB", urlResult: "https://www.calottery.com/en/draw-games/daily-4", liveDraw: null },
+    { nama: "FLORIDA EVENING", hari: "Senin - Minggu", tutup: "08:35 WIB", buka: "08:45 WIB", urlResult: "https://floridalottery.com/games/draw-games/pick-4", liveDraw: "https://www.youtube.com/@floridalottery" },
+    { nama: "OREGON 09", hari: "Senin - Minggu", tutup: "08:50 WIB", buka: "09:00 WIB", urlResult: "https://www.oregonlottery.org/pick-4/winning-numbers/", liveDraw: null },
+    { nama: "BANGKOK 0930", hari: "Senin - Minggu", tutup: "09:15 WIB", buka: "09:30 WIB", urlResult: "https://bangkokpoolstoday.com", liveDraw: null },
+    { nama: "NEW YORK EVENING", hari: "Senin - Minggu", tutup: "09:25 WIB", buka: "09:35 WIB", urlResult: "https://nylottery.ny.gov/", liveDraw: null },
+    { nama: "KENTUCKY EVENING", hari: "Senin - Minggu", tutup: "09:45 WIB", buka: "10:00 WIB", urlResult: "https://play.kylottery.com/en-us/playnow/pick4.html", liveDraw: null },
+    { nama: "CAROLINA EVENING", hari: "Senin - Minggu", tutup: "10:17 WIB", buka: "10:22 WIB", urlResult: "https://www.wral.com/evening-pick-3-pick-4-and-cash-5/1075494/", liveDraw: "https://www.wral.com/evening-pick-3-pick-4-and-cash-5/1075494/" },
+    { nama: "TOTO CAMBODIA", hari: "Senin - Minggu", tutup: "10:45 WIB", buka: "11:00 WIB", urlResult: "https://totocambodialive.com/index.html", liveDraw: "https://www.youtube.com/@TotoCambodiaOfficial" },
+    { nama: "CHELSEA 11", hari: "Senin - Minggu", tutup: "11:00 WIB", buka: "11:15 WIB", urlResult: "https://chelseapools.co.uk/", liveDraw: null },
+    { nama: "OREGON 12", hari: "Senin - Minggu", tutup: "11:50 WIB", buka: "12:00 WIB", urlResult: "https://www.oregonlottery.org/pick-4/winning-numbers/", liveDraw: null },
+    { nama: "POIPET 12", hari: "Senin - Minggu", tutup: "12:15 WIB", buka: "12:30 WIB", urlResult: "https://poipetlottery.com/", liveDraw: "https://poipetlottery.com/liveresult" },
+    { nama: "TOTO MACAU SIANG", hari: "Senin - Minggu", tutup: "13:00 WIB", buka: "13:15 WIB", urlResult: "https://totomacaunew.us/", liveDraw: "https://kick.com/live-ttm4d" },
+    { nama: "BULLSEYE", hari: "Senin - Minggu", tutup: "12:00 WIB", buka: "12:15 WIB", urlResult: "https://mylotto.co.nz/results/bullseye", liveDraw: null },
+    { nama: "SYDNEY", hari: "Senin - Minggu", tutup: "13:49 WIB", buka: "14:05 WIB", urlResult: "https://lottosydney.fun/", liveDraw: "https://kick.com/sydney-lotto-official" },
+    { nama: "JAKARTA POOLS", hari: "Senin - Minggu", tutup: "14:00 WIB", buka: "14:15 WIB", urlResult: "https://www.jakartapool.com/", liveDraw: "https://kick.com/studio-live-game" },
+    { nama: "BRUNEI 14", hari: "Senin - Minggu", tutup: "14:30 WIB", buka: "14:45 WIB", urlResult: "https://bruneipools.com/", liveDraw: null },
+    { nama: "CHELSEA 15", hari: "Senin - Minggu", tutup: "15:00 WIB", buka: "15:15 WIB", urlResult: "https://chelseapools.co.uk/", liveDraw: null },
+    { nama: "POIPET 15", hari: "Senin - Minggu", tutup: "15:15 WIB", buka: "15:30 WIB", urlResult: "https://poipetlottery.com/", liveDraw: "https://poipetlottery.com/liveresult" },
+    { nama: "TOTOMALI", hari: "Senin - Minggu", tutup: "15:15 WIB", buka: "15:30 WIB", urlResult: "https://totomali.com/", liveDraw: "https://totomali.com/live-draw.html" },
+    { nama: "TOTO MACAU SORE", hari: "Senin - Minggu", tutup: "16:00 WIB", buka: "16:15 WIB", urlResult: "https://totomacaunew.us/", liveDraw: "https://kick.com/live-ttm4d" },
+    { nama: "HUAHIN 1630", hari: "Senin - Minggu", tutup: "16:15 WIB", buka: "16:30 WIB", urlResult: "https://huahinlottery.com/", liveDraw: "https://www.youtube.com/@huahinlottery5727" },
+    { nama: "KING KONG 4D", hari: "Senin - Minggu", tutup: "17:00 WIB", buka: "17:15 WIB", urlResult: "https://kingkongpools.id/", liveDraw: "https://kick.com/king-kong-pools" },
+    { nama: "SINGAPORE", hari: "Selasa & Jumat Libur", tutup: "17:30 WIB", buka: "17:45 WIB", urlResult: "https://www.singaporepools.com.sg/landing/en/Pages/index.html", liveDraw: null },
+    { nama: "MAGNUM 4D", hari: "Rabu, Sabtu, Minggu", tutup: "18:10 WIB", buka: "18:40 WIB", urlResult: "https://www.magnum4d.my/en/", liveDraw: null },
+    { nama: "CHELSEA 19", hari: "Senin - Minggu", tutup: "19:00 WIB", buka: "19:15 WIB", urlResult: "https://chelseapools.co.uk/", liveDraw: null },
+    { nama: "TOTO MACAU MALAM", hari: "Senin - Minggu", tutup: "19:00 WIB", buka: "19:15 WIB", urlResult: "https://totomacaunew.us/", liveDraw: "https://kick.com/live-ttm4d" },
+    { nama: "POIPET 19", hari: "Senin - Minggu", tutup: "19:30 WIB", buka: "19:45 WIB", urlResult: "https://poipetlottery.com/", liveDraw: "https://poipetlottery.com/liveresult" },
+    { nama: "PCSO", hari: "Minggu Libur", tutup: "19:50 WIB", buka: "20:10 WIB", urlResult: "https://www.pcso.gov.ph/", liveDraw: null },
+    { nama: "HUAHIN 2100", hari: "Senin - Minggu", tutup: "20:45 WIB", buka: "21:00 WIB", urlResult: "https://huahinlottery.com/", liveDraw: "https://www.youtube.com/@huahinlottery5727" },
+    { nama: "CHELSEA 21", hari: "Senin - Minggu", tutup: "21:00 WIB", buka: "21:15 WIB", urlResult: "https://chelseapools.co.uk/", liveDraw: null },
+    { nama: "NEVADA", hari: "Senin - Minggu", tutup: "21:15 WIB", buka: "21:30 WIB", urlResult: "https://www.nevadalottery.us/", liveDraw: null },
+    { nama: "BRUNEI 21", hari: "Senin - Minggu", tutup: "21:30 WIB", buka: "21:45 WIB", urlResult: "https://bruneipools.com/", liveDraw: null },
+    { nama: "TOTO MACAU MALAM II", hari: "Senin - Minggu", tutup: "22:00 WIB", buka: "22:15 WIB", urlResult: "https://totomacaunew.us/", liveDraw: "https://kick.com/live-ttm4d" },
+    { nama: "POIPET 22", hari: "Senin - Minggu", tutup: "22:30 WIB", buka: "22:45 WIB", urlResult: "https://poipetlottery.com/", liveDraw: "https://poipetlottery.com/liveresult" },
+    { nama: "HONGKONG", hari: "Senin - Minggu", tutup: "22:59 WIB", buka: "23:15 WIB", urlResult: "https://hongkonglotto.today", liveDraw: "https://kick.com/hongkong-lotto-official" },
+    { nama: "TOTO MACAU MALAM III", hari: "Senin - Minggu", tutup: "23:00 WIB", buka: "23:15 WIB", urlResult: "https://totomacaunew.us/", liveDraw: "https://kick.com/live-ttm4d" }
   ];
 
   const tbody = document.getElementById('tableBody');
@@ -552,7 +532,6 @@
   const liveCountSpan = document.getElementById('liveCount');
   const resultCountSpan = document.getElementById('resultCountText');
 
-  // Hitung total dan live draw count
   const totalMarkets = marketData.length;
   const totalLive = marketData.filter(m => m.liveDraw).length;
   if (totalSpan) totalSpan.innerText = totalMarkets;
@@ -593,7 +572,6 @@
         <tr>
           <td>
             <div class="market-cell">
-              <img class="market-logo" src="${escapeAttr(item.logo)}" alt="${escapeHtml(item.nama)}" onerror="this.src='https://placehold.co/40x40?text=?'">
               <span class="market-name">${escapeHtml(item.nama)}</span>
             </div>
           </td>
