@@ -1,975 +1,563 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Memo Keterlambatan Result - Google Sheets</title>
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <!-- AOS Animation -->
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        :root {
-            --primary: #4361ee;
-            --secondary: #3f37c9;
-            --success: #4cc9f0;
-            --danger: #f72585;
-            --warning: #f8961e;
-            --dark: #1a1a2e;
-            --light: #f8f9fa;
-            --gray: #6c757d;
-        }
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
-        }
-        
-        .header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 30px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            animation: rotate 20s linear infinite;
-        }
-        
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        
-        .header-content {
-            position: relative;
-            z-index: 1;
-        }
-        
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .header h1 i {
-            background: rgba(255,255,255,0.2);
-            padding: 15px;
-            border-radius: 15px;
-            font-size: 0.8em;
-        }
-        
-        .badge {
-            background: rgba(255,255,255,0.2);
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            padding: 30px;
-            background: white;
-            border-bottom: 1px solid rgba(0,0,0,0.1);
-        }
-        
-        .stat-card {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            padding: 20px;
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            transition: transform 0.3s;
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .stat-icon {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.5em;
-        }
-        
-        .stat-info h3 {
-            font-size: 0.9em;
-            color: var(--gray);
-            margin-bottom: 5px;
-        }
-        
-        .stat-info p {
-            font-size: 1.5em;
-            font-weight: 600;
-            color: var(--dark);
-        }
-        
-        .sheet-info {
-            background: white;
-            padding: 20px 30px;
-            border-bottom: 1px solid #e0e0e0;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 25px;
-            align-items: center;
-        }
-        
-        .info-tag {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--gray);
-            font-size: 0.95em;
-        }
-        
-        .info-tag i {
-            color: var(--primary);
-            width: 20px;
-        }
-        
-        .info-tag span {
-            color: var(--dark);
-            font-weight: 500;
-        }
-        
-        .controls {
-            padding: 20px 30px;
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            align-items: center;
-            background: white;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        
-        .search-box {
-            flex: 1;
-            position: relative;
-            min-width: 300px;
-        }
-        
-        .search-box i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--gray);
-        }
-        
-        .search-box input {
-            width: 100%;
-            padding: 14px 20px 14px 45px;
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            font-size: 0.95em;
-            transition: all 0.3s;
-            font-family: 'Inter', sans-serif;
-        }
-        
-        .search-box input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(67,97,238,0.1);
-        }
-        
-        .btn {
-            padding: 14px 25px;
-            border: none;
-            border-radius: 12px;
-            font-size: 0.95em;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-family: 'Inter', sans-serif;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(67,97,238,0.3);
-        }
-        
-        .btn-success {
-            background: linear-gradient(135deg, #4cc9f0, #4895ef);
-            color: white;
-        }
-        
-        .btn-warning {
-            background: linear-gradient(135deg, #f8961e, #f3722c);
-            color: white;
-        }
-        
-        .btn-outline {
-            background: transparent;
-            border: 2px solid var(--primary);
-            color: var(--primary);
-        }
-        
-        .btn-outline:hover {
-            background: var(--primary);
-            color: white;
-        }
-        
-        .table-container {
-            padding: 0 30px 30px 30px;
-            overflow-x: auto;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-        }
-        
-        th {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            font-weight: 500;
-            padding: 18px 15px;
-            text-align: left;
-            font-size: 0.95em;
-        }
-        
-        th i {
-            margin-right: 8px;
-            opacity: 0.9;
-        }
-        
-        td {
-            padding: 15px;
-            border-bottom: 1px solid #e0e0e0;
-            color: var(--dark);
-        }
-        
-        tr:last-child td {
-            border-bottom: none;
-        }
-        
-        tr:hover td {
-            background-color: rgba(67,97,238,0.02);
-        }
-        
-        .row-number {
-            font-weight: 600;
-            color: var(--primary);
-            width: 70px;
-        }
-        
-        .empty-data {
-            color: var(--gray);
-            font-style: italic;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .empty-data i {
-            font-size: 0.8em;
-            opacity: 0.5;
-        }
-        
-        .loading {
-            text-align: center;
-            padding: 60px;
-            color: var(--gray);
-        }
-        
-        .loading i {
-            font-size: 3em;
-            color: var(--primary);
-            margin-bottom: 15px;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .error {
-            background: linear-gradient(135deg, #f72585, #b5179e);
-            color: white;
-            padding: 20px 30px;
-            margin: 20px 30px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            animation: slideIn 0.3s ease;
-        }
-        
-        @keyframes slideIn {
-            from {
-                transform: translateY(-20px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-        
-        .stats-footer {
-            padding: 20px 30px;
-            background: white;
-            border-top: 1px solid #e0e0e0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        
-        .pagination {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        
-        .page-btn {
-            width: 40px;
-            height: 40px;
-            border: 1px solid #e0e0e0;
-            background: white;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .page-btn:hover:not(:disabled) {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-        
-        .page-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .page-info {
-            padding: 0 15px;
-            color: var(--gray);
-        }
-        
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: white;
-            padding: 15px 25px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            animation: slideUp 0.3s ease;
-            z-index: 1000;
-        }
-        
-        @keyframes slideUp {
-            from {
-                transform: translateY(100px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-        
-        .toast.success {
-            border-left: 4px solid #4cc9f0;
-        }
-        
-        .toast.error {
-            border-left: 4px solid #f72585;
-        }
-        
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 1.8em;
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
-            
-            .controls {
-                flex-direction: column;
-            }
-            
-            .search-box {
-                width: 100%;
-            }
-            
-            .btn {
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .stats-footer {
-                flex-direction: column;
-                text-align: center;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Jadwal Live Draw Togel | Update Harian</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+      color: #1e293b;
+      position: relative;
+      background: #0a1a2a;
+    }
+
+    /* Background image dengan overlay gelap agar teks terbaca */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url('https://cdn.areabermain.club/assets/cdn/az9/2026/01/15/20260115/a738fa90e31c8d69e13f64c585c7b386/background-web-hokijitu.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      opacity: 0.85;
+      z-index: -2;
+    }
+
+    /* Overlay semi-transparan untuk meningkatkan readability */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(10, 26, 42, 0.75) 0%, rgba(15, 35, 55, 0.85) 100%);
+      z-index: -1;
+    }
+
+    /* Container utama */
+    .main-wrapper {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 32px 28px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Header section */
+    .header-section {
+      margin-bottom: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 20px;
+      border-bottom: 2px solid rgba(255, 215, 150, 0.4);
+      padding-bottom: 20px;
+    }
+
+    .title-area h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #FFD97E 0%, #FFB347 50%, #FF8C42 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      letter-spacing: -0.3px;
+      margin-bottom: 8px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .title-area .sub {
+      color: rgba(255, 245, 220, 0.9);
+      font-size: 0.85rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .title-area .sub i {
+      font-size: 12px;
+      color: #FFB347;
+    }
+
+    /* Stats info - glassmorphism effect */
+    .stats-info {
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(10px);
+      border-radius: 60px;
+      padding: 8px 20px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 215, 150, 0.3);
+      display: flex;
+      gap: 20px;
+    }
+
+    .stats-info .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #FFE5B4;
+    }
+
+    .stats-info .stat-item i {
+      color: #FFB347;
+      font-size: 14px;
+    }
+
+    /* Search dan filter bar - glassmorphism */
+    .search-bar {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 8px 8px 8px 24px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      border: 1px solid rgba(255, 215, 150, 0.35);
+    }
+
+    .search-input-wrapper {
+      flex: 1;
+      min-width: 240px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .search-input-wrapper i {
+      color: #FFD97E;
+      font-size: 1rem;
+    }
+
+    #searchInput {
+      flex: 1;
+      border: none;
+      padding: 12px 0;
+      font-size: 0.9rem;
+      font-family: 'Inter', sans-serif;
+      background: transparent;
+      outline: none;
+      color: #FFF5E6;
+      font-weight: 500;
+    }
+
+    #searchInput::placeholder {
+      color: rgba(255, 235, 200, 0.6);
+      font-weight: 400;
+    }
+
+    .result-count {
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(4px);
+      padding: 6px 16px;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #FFD97E;
+      border: 1px solid rgba(255, 215, 150, 0.3);
+    }
+
+    /* Tabel modern dengan efek glass */
+    .table-container {
+      background: rgba(15, 35, 55, 0.6);
+      backdrop-filter: blur(12px);
+      border-radius: 24px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      overflow-x: auto;
+      border: 1px solid rgba(255, 215, 150, 0.25);
+      transition: all 0.2s;
+    }
+
+    .schedule-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 0.9rem;
+      min-width: 780px;
+    }
+
+    .schedule-table thead tr {
+      background: rgba(0, 0, 0, 0.35);
+      border-bottom: 1px solid rgba(255, 215, 150, 0.3);
+    }
+
+    .schedule-table th {
+      padding: 18px 20px;
+      text-align: left;
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #FFD97E;
+      border-bottom: 2px solid rgba(255, 185, 80, 0.5);
+      background: rgba(0, 0, 0, 0.25);
+    }
+
+    .schedule-table td {
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(255, 215, 150, 0.15);
+      color: #F5EAD8;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+
+    .schedule-table tbody tr:hover td {
+      background: rgba(255, 215, 150, 0.1);
+    }
+
+    /* Kolom pasaran */
+    .pasaran-name {
+      font-weight: 800;
+      color: #FFD97E;
+      font-size: 0.95rem;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+
+    /* Badge untuk hari operasional */
+    .day-badge {
+      background: rgba(255, 200, 120, 0.2);
+      backdrop-filter: blur(4px);
+      padding: 4px 12px;
+      border-radius: 30px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: inline-block;
+      color: #FFE0A3;
+      border: 1px solid rgba(255, 200, 100, 0.3);
+    }
+
+    .special-day {
+      background: rgba(255, 150, 70, 0.25);
+      color: #FFC285;
+      border-color: rgba(255, 140, 50, 0.5);
+    }
+
+    /* Waktu */
+    .time-close {
+      font-weight: 600;
+      color: #FFA559;
+      background: rgba(255, 100, 50, 0.15);
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 24px;
+      font-size: 0.8rem;
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255, 140, 80, 0.3);
+    }
+
+    .time-open {
+      font-weight: 700;
+      color: #7ED47E;
+      background: rgba(80, 200, 80, 0.15);
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 24px;
+      font-size: 0.8rem;
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(100, 220, 100, 0.3);
+    }
+
+    /* Link website */
+    .site-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 200, 100, 0.2);
+      backdrop-filter: blur(4px);
+      padding: 6px 14px;
+      border-radius: 40px;
+      text-decoration: none;
+      color: #FFD97E;
+      font-weight: 600;
+      font-size: 0.75rem;
+      transition: all 0.2s;
+      white-space: nowrap;
+      border: 1px solid rgba(255, 200, 100, 0.4);
+    }
+
+    .site-link i {
+      font-size: 12px;
+    }
+
+    .site-link:hover {
+      background: #FFB347;
+      color: #1e2a3a;
+      transform: translateY(-1px);
+      border-color: #FFB347;
+    }
+
+    /* Empty state */
+    .empty-row td {
+      text-align: center;
+      padding: 48px 20px !important;
+      color: #FFD97E;
+      font-weight: 500;
+    }
+
+    /* Footer */
+    .footer-note {
+      margin-top: 32px;
+      text-align: center;
+      font-size: 0.7rem;
+      color: rgba(255, 235, 200, 0.7);
+      padding: 20px 0 8px;
+      border-top: 1px solid rgba(255, 215, 150, 0.25);
+    }
+
+    /* Scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #FFB347;
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #FFD97E;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .main-wrapper {
+        padding: 20px 16px;
+      }
+      .header-section {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .stats-info {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .search-bar {
+        padding: 12px 20px;
+      }
+      .schedule-table th, 
+      .schedule-table td {
+        padding: 12px 14px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container" data-aos="fade-up">
-        <div class="header">
-            <div class="header-content">
-                <h1>
-                    <i class="fas fa-clock"></i>
-                    Memo Keterlambatan Result
-                    <span class="badge">
-                        <i class="fas fa-google-sheets"></i>
-                        Live Data
-                    </span>
-                </h1>
-                <p>Monitoring data keterlambatan hasil dari Google Sheets</p>
-            </div>
-        </div>
-        
-        <div class="stats-grid" id="statsGrid">
-            <div class="stat-card" data-aos="fade-right">
-                <div class="stat-icon">
-                    <i class="fas fa-database"></i>
-                </div>
-                <div class="stat-info">
-                    <h3>Total Data</h3>
-                    <p id="totalData">-</p>
-                </div>
-            </div>
-            <div class="stat-card" data-aos="fade-right" data-aos-delay="100">
-                <div class="stat-icon">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-                <div class="stat-info">
-                    <h3>Data Terisi</h3>
-                    <p id="filledData">-</p>
-                </div>
-            </div>
-            <div class="stat-card" data-aos="fade-right" data-aos-delay="200">
-                <div class="stat-icon">
-                    <i class="fas fa-clock"></i>
-                </div>
-                <div class="stat-info">
-                    <h3>Last Update</h3>
-                    <p id="lastUpdate">-</p>
-                </div>
-            </div>
-            <div class="stat-card" data-aos="fade-right" data-aos-delay="300">
-                <div class="stat-icon">
-                    <i class="fas fa-layer-group"></i>
-                </div>
-                <div class="stat-info">
-                    <h3>Sheet</h3>
-                    <p id="sheetName">MEMO KETERLAMBATAN</p>
-                </div>
-            </div>
-        </div>
-        
-        <div class="sheet-info" id="sheetInfo" data-aos="fade-up">
-            <div class="info-tag">
-                <i class="fas fa-file-excel"></i>
-                <span id="spreadsheetName">Loading...</span>
-            </div>
-            <div class="info-tag">
-                <i class="fas fa-layer-group"></i>
-                <span id="activeSheet">MEMO KETERLAMBATAN RESULT</span>
-            </div>
-            <div class="info-tag">
-                <i class="fas fa-calendar"></i>
-                <span id="currentDateTime">-</span>
-            </div>
-        </div>
-        
-        <div class="controls" data-aos="fade-up">
-            <div class="search-box">
-                <i class="fas fa-search"></i>
-                <input type="text" id="searchInput" placeholder="Cari data keterlambatan... (tekan Enter)" onkeyup="filterData(event)">
-            </div>
-            <button class="btn btn-primary" onclick="loadData()">
-                <i class="fas fa-sync-alt"></i>
-                Refresh
-            </button>
-            <button class="btn btn-success" onclick="exportToCSV()">
-                <i class="fas fa-file-csv"></i>
-                Export CSV
-            </button>
-            <button class="btn btn-warning" onclick="exportToExcel()">
-                <i class="fas fa-file-excel"></i>
-                Export Excel
-            </button>
-            <button class="btn btn-outline" onclick="printData()">
-                <i class="fas fa-print"></i>
-                Print
-            </button>
-        </div>
-        
-        <div id="error" class="error" style="display: none;" data-aos="fade-up">
-            <i class="fas fa-exclamation-triangle"></i>
-            <span id="errorMessage"></span>
-        </div>
-        
-        <div id="loading" class="loading" style="display: none;" data-aos="fade-up">
-            <i class="fas fa-spinner"></i>
-            <p>Memuat data keterlambatan...</p>
-        </div>
-        
-        <div class="table-container" id="tableContainer" data-aos="fade-up">
-            <table id="dataTable">
-                <thead>
-                    <tr>
-                        <th><i class="fas fa-hashtag"></i> No</th>
-                        <th><i class="fas fa-tag"></i> <span id="headerB">Memo Keterlambatan</span></th>
-                        <th><i class="fas fa-clock"></i> <span id="headerC">Result</span></th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody">
-                    <tr>
-                        <td colspan="3" style="text-align: center; padding: 50px;">
-                            <i class="fas fa-cloud-upload-alt" style="font-size: 3em; color: #ccc; margin-bottom: 15px;"></i>
-                            <p style="color: var(--gray);">Klik tombol Refresh untuk melihat data keterlambatan</p>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        
-        <div class="stats-footer" id="statsFooter">
-            <div class="info-tag">
-                <i class="fas fa-list"></i>
-                <span id="displayInfo">Menampilkan 0 dari 0 data</span>
-            </div>
-            <div class="pagination">
-                <button class="page-btn" onclick="prevPage()" id="prevBtn" disabled>
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <span class="page-info" id="pageInfo">Halaman 1 dari 1</span>
-                <button class="page-btn" onclick="nextPage()" id="nextBtn" disabled>
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-            </div>
-        </div>
+<div class="main-wrapper">
+  <!-- Header -->
+  <div class="header-section">
+    <div class="title-area">
+      <h1><i class="fas fa-calendar-alt" style="color: #FFB347; margin-right: 10px;"></i> Jadwal Live Draw Togel</h1>
+      <div class="sub">
+        <i class="fas fa-clock"></i> Update realtime · Waktu Indonesia Barat (WIB)
+        <i class="fas fa-circle" style="font-size: 6px; margin-left: 4px; color: #7ED47E;"></i>
+      </div>
     </div>
-    
-    <!-- Toast notification -->
-    <div id="toast" class="toast" style="display: none;">
-        <i class="fas fa-info-circle"></i>
-        <span id="toastMessage"></span>
+    <div class="stats-info">
+      <div class="stat-item"><i class="fas fa-chart-line"></i> <span id="totalCount">0</span> Pasaran Aktif</div>
+      <div class="stat-item"><i class="fas fa-globe-asia"></i> Worldwide Pools</div>
     </div>
+  </div>
+
+  <!-- Search & Filter -->
+  <div class="search-bar">
+    <div class="search-input-wrapper">
+      <i class="fas fa-search"></i>
+      <input type="text" id="searchInput" placeholder="Cari pasaran... (contoh: Sydney, Macau, Singapore, Hongkong)" autocomplete="off">
+    </div>
+    <div class="result-count" id="resultCountText">📋 Memuat data...</div>
+  </div>
+
+  <!-- Tabel Jadwal -->
+  <div class="table-container">
+    <table class="schedule-table" id="scheduleTable">
+      <thead>
+        <tr>
+          <th>Nama Pasaran</th>
+          <th>Hari Operasional</th>
+          <th>Jam Tutup (WIB)</th>
+          <th>Jam Buka / Result (WIB)</th>
+          <th>Situs Resmi</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <tr><td colspan="5" style="text-align:center; padding: 40px; color: #FFD97E;">Memuat data jadwal... <i class="fas fa-spinner fa-pulse"></i></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="footer-note">
+    <i class="far fa-bell"></i> Jadwal dapat berubah sewaktu-waktu. Selalu cek informasi terbaru dari masing-masing pasaran.
+  </div>
+</div>
+
+<!-- Data Tabel Tersembunyi (sumber data) -->
+<table style="display: none;">
+  <tbody id="dataSource">
+    <tr><td>HOKIDRAW</td><td>SENIN - MINGGU</td><td>RESULT 24 KALI</td><td>1 JAM SEKALI</td><td><a href="https://hokidraw.com/">Klik di sini</a></td></tr>
+    <tr><td>TOTOMACAU 4D PAGI</td><td>SENIN - MINGGU</td><td>00:00 WIB</td><td>00:15 WIB</td><td><a href="https://totomacau-pools.us/">Klik di sini</a></td></tr>
+    <tr><td>KENTUCKY MIDDAY</td><td>SENIN - MINGGU</td><td>00:05 WIB</td><td>00:20 WIB</td><td><a href="https://www.kylottery.com/apps/draw_games">Klik disini</a></td></tr>
+    <tr><td>FLORIDA MIDDAY</td><td>SENIN - MINGGU</td><td>00:20 WIB</td><td>00:30 WIB</td><td><a href="https://floridalottery.com/games/draw-games/pick-4">Klik disini</a></td></tr>
+    <tr><td>HUAHIN 0100</td><td>SENIN - MINGGU</td><td>00:45 WIB</td><td>01:00 WIB</td><td><a href="https://huahinlottery.com/">Klik disini</a></td></tr>
+    <tr><td>BANGKOK 0130</td><td>SENIN - MINGGU</td><td>01:15 WIB</td><td>01:30 WIB</td><td><a href="https://bangkokpoolstoday.com/">Klik disini</a></td></tr>
+    <tr><td>NEWYORK MIDDAY</td><td>SENIN - MINGGU</td><td>01:15 WIB</td><td>01:25 WIB</td><td><a href="https://nylottery.ny.gov/">Klik disini</a></td></tr>
+    <tr><td>CAROLINA DAY</td><td>SENIN - MINGGU</td><td>01:45 WIB</td><td>02:00 WIB</td><td><a href="https://nclottery.com/Pick4">Klik di sini</a></td></tr>
+    <tr><td>BRUNEI 02</td><td>SENIN - MINGGU</td><td>02:30 WIB</td><td>02:45 WIB</td><td><a href="https://bruneipools.com/">Klik di sini</a></td></tr>
+    <tr><td>OREGON 03</td><td>SENIN - MINGGU</td><td>02:50 WIB</td><td>03:00 WIB</td><td><a href="https://www.oregonlottery.org/pick-4/winning-numbers/">Klik di sini</a></td></tr>
+    <tr><td>OREGON 06</td><td>SENIN - MINGGU</td><td>05:50 WIB</td><td>06:00 WIB</td><td><a href="https://www.oregonlottery.org/pick-4/winning-numbers/">Klik di sini</a></td></tr>
+    <tr><td>CALIFORNIA</td><td>SENIN - MINGGU</td><td>08:25 WIB</td><td>08:30 WIB</td><td><a href="https://www.calottery.com/draw-games/daily-4">Klik disini</a></td></tr>
+    <tr><td>FLORIDA EVENING</td><td>SENIN - MINGGU</td><td>08:35 WIB</td><td>08:45 WIB</td><td><a href="https://floridalottery.com/games/draw-games/pick-4">Klik disini</a></td></tr>
+    <tr><td>OREGON 09</td><td>SENIN - MINGGU</td><td>08:50 WIB</td><td>09:00 WIB</td><td><a href="https://www.oregonlottery.org/pick-4/winning-numbers/">Klik disini</a></td></tr>
+    <tr><td>BANGKOK 0930</td><td>SENIN - MINGGU</td><td>09:15 WIB</td><td>09:30 WIB</td><td><a href="https://bangkokpoolstoday.com/">Klik di sini</a></td></tr>
+    <tr><td>NEWYORK EVENING</td><td>SENIN - MINGGU</td><td>09:25 WIB</td><td>09:35 WIB</td><td><a href="https://nylottery.ny.gov/">Klik di sini</a></td></tr>
+    <tr><td>KENTUCKY EVENING</td><td>SENIN - MINGGU</td><td>09:45 WIB</td><td>10:00 WIB</td><td><a href="https://www.kylottery.com/apps/draw_games">Klik di sini</a></td></tr>
+    <tr><td>CAROLINA EVENING</td><td>SENIN - MINGGU</td><td>10:17 WIB</td><td>10:22 WIB</td><td><a href="https://nclottery.com/Pick4">Klik di sini</a></td></tr>
+    <tr><td>TOTOCAMBODIA</td><td>SENIN - MINGGU</td><td>10:45 WIB</td><td>11:00 WIB</td><td><a href="https://totocambodialive.com/">Klik di sini</a></td></tr>
+    <tr><td>CHELSEA 11</td><td>SENIN - MINGGU</td><td>11:00 WIB</td><td>11:15 WIB</td><td><a href="https://chelseapools.co.uk/">Klik di sini</a></td></tr>
+    <tr><td>OREGON 12</td><td>SENIN - MINGGU</td><td>11:50 WIB</td><td>12:00 WIB</td><td><a href="https://www.oregonlottery.org/pick-4/winning-numbers/">Klik di sini</a></td></tr>
+    <tr><td>POIPET 12</td><td>SENIN - MINGGU</td><td>12:15 WIB</td><td>12:30 WIB</td><td><a href="https://poipetlottery.com/">Klik di sini</a></td></tr>
+    <tr><td>BULLSEYE</td><td>SENIN - MINGGU</td><td>12:00 WIB</td><td>12:15 WIB</td><td><a href="https://mylotto.co.nz/results/bullseye">Klik di sini</a></td></tr>
+    <tr><td>TOTOMACAU 4D SIANG</td><td>SENIN - MINGGU</td><td>13:00 WIB</td><td>13:15 WIB</td><td><a href="https://totomacau-pools.us/">Klik di sini</a></td></tr>
+    <tr><td>SYDNEY</td><td>SENIN - MINGGU</td><td>13:49 WIB</td><td>14:05 WIB</td><td><a href="https://sydneylottobaru.site/">Klik disini</a></td></tr>
+    <tr><td>BRUNEI 14</td><td>SENIN - MINGGU</td><td>14:30 WIB</td><td>14:45 WIB</td><td><a href="https://bruneipools.com/">Klik di sini</a></td></tr>
+    <tr><td>CHELSEA 15</td><td>SENIN - MINGGU</td><td>15:00 WIB</td><td>15:15 WIB</td><td><a href="https://chelseapools.co.uk/">Klik di sini</a></td></tr>
+    <tr><td>POIPET 15</td><td>SENIN - MINGGU</td><td>15:15 WIB</td><td>15:30 WIB</td><td><a href="https://poipetlottery.com/">Klik di sini</a></td></tr>
+    <tr><td>TOTOMALI 1530</td><td>SENIN - MINGGU</td><td>15:15 WIB</td><td>15:30 WIB</td><td><a href="https://totomali.com/">Klik di sini</a></td></tr>
+    <tr><td>TOTOMACAU 4D SORE</td><td>SENIN - MINGGU</td><td>16:00 WIB</td><td>16:15 WIB</td><td><a href="https://totomacau-pools.us/">Klik di sini</a></td></tr>
+    <tr><td>HUAHIN 1630</td><td>SENIN - MINGGU</td><td>16:15 WIB</td><td>16:30 WIB</td><td><a href="https://huahinlottery.com/">Klik di sini</a></td></tr>
+    <tr><td>KINGKONG 4D SORE</td><td>SENIN - MINGGU</td><td>17:00 WIB</td><td>17:15 WIB</td><td><a href="https://kingkongpools.id/">Klik di sini</a></td></tr>
+    <tr><td>SINGAPORE</td><td>SELASA & JUMAT LIBUR</td><td>17:30 WIB</td><td>17:45 WIB</td><td><a href="https://www.singaporepools.com.sg/landing/en/Pages/index.html">Klik di sini</a></td></tr>
+    <tr><td>MAGNUM4D</td><td>RABU, SABTU, & MINGGU</td><td>18:10 WIB</td><td>18:40 WIB</td><td><a href="https://www.magnum4d.my/en">Klik di sini</a></td></tr>
+    <tr><td>TOTOMACAU 4D MALAM I</td><td>SENIN - MINGGU</td><td>19:00 WIB</td><td>19:15 WIB</td><td><a href="https://totomacau-pools.us/">Klik di sini</a></td></tr>
+    <tr><td>CHELSEA 19</td><td>SENIN - MINGGU</td><td>19:00 WIB</td><td>19:15 WIB</td><td><a href="https://chelseapools.co.uk/">Klik di sini</a></td></tr>
+    <tr><td>POIPET 19</td><td>SENIN - MINGGU</td><td>19:30 WIB</td><td>19:45 WIB</td><td><a href="https://poipetlottery.com/">Klik di sini</a></td></tr>
+    <tr><td>PCSO</td><td>MINGGU LIBUR</td><td>19:50 WIB</td><td>20:10 WIB</td><td><a href="https://www.pcso.gov.ph/">Klik disini</a></td></tr>
+    <tr><td>TOTOMALI 2030</td><td>SENIN - MINGGU</td><td>20:15 WIB</td><td>20:30 WIB</td><td><a href="https://totomali.com/">Klik di sini</a></td></tr>
+    <tr><td>HUAHIN 2100</td><td>SENIN - MINGGU</td><td>20:45 WIB</td><td>21:00 WIB</td><td><a href="https://huahinlottery.com/">Klik di sini</a></td></tr>
+    <tr><td>CHELSEA 21</td><td>SENIN - MINGGU</td><td>21:00 WIB</td><td>21:15 WIB</td><td><a href="https://chelseapools.co.uk/">Klik di sini</a></td></tr>
+    <tr><td>NEVADA</td><td>SENIN - MINGGU</td><td>21:15 WIB</td><td>21:30 WIB</td><td><a href="https://www.nevadalottery.us/">Klik di sini</a></td></tr>
+    <tr><td>BRUNEI 21</td><td>SENIN - MINGGU</td><td>21:30 WIB</td><td>21:45 WIB</td><td><a href="https://bruneipools.com/">Klik di sini</a></td></tr>
+    <tr><td>TOTOMACAU 4D MALAM II</td><td>SENIN - MINGGU</td><td>22:00 WIB</td><td>22:15 WIB</td><td><a href="https://totomacau-pools.us/">Klik di sini</a></td></tr>
+    <tr><td>POIPET 22</td><td>SENIN - MINGGU</td><td>22:30 WIB</td><td>22:45 WIB</td><td><a href="https://poipetlottery.com/">Klik di sini</a></td></tr>
+    <tr><td>HONGKONG</td><td>SENIN - MINGGU</td><td>22:59 WIB</td><td>23:15 WIB</td><td><a href="https://lottohongkong.fun/">Klik di sini</a></td></tr>
+    <tr><td>TOTOMACAU 4D MALAM III</td><td>SENIN - MINGGU</td><td>23:00 WIB</td><td>23:15 WIB</td><td><a href="https://totomacau-pools.us/">Klik di sini</a></td></tr>
+    <tr><td>TOTOMALI 2330</td><td>SENIN - MINGGU</td><td>23:15 WIB</td><td>23:30 WIB</td><td><a href="https://totomali.com/">Klik di sini</a></td></tr>
+    <tr><td>KINGKONG 4D MALAM</td><td>SENIN - MINGGU</td><td>23:30 WIB</td><td>23:45 WIB</td><td><a href="https://kingkongpools.id/">Klik di sini</a></td></tr>
+  </tbody>
+</table>
+
+<script>
+  (function() {
+    const sourceRows = document.querySelectorAll('#dataSource tr');
+    const tbody = document.getElementById('tableBody');
+    const searchInput = document.getElementById('searchInput');
+    const totalSpan = document.getElementById('totalCount');
+    const resultCountSpan = document.getElementById('resultCountText');
+
+    let allData = [];
+
+    sourceRows.forEach(row => {
+      const cells = row.querySelectorAll('td');
+      if (cells.length >= 5) {
+        const nama = cells[0]?.innerText?.trim() || '';
+        const hari = cells[1]?.innerText?.trim() || '';
+        const tutup = cells[2]?.innerText?.trim() || '';
+        const buka = cells[3]?.innerText?.trim() || '';
+        const linkCell = cells[4];
+        let url = '#';
+        const anchor = linkCell.querySelector('a');
+        if (anchor && anchor.href) url = anchor.href;
+        
+        if (nama) {
+          allData.push({ nama, hari, tutup, buka, url });
+        }
+      }
+    });
+
+    if (totalSpan) totalSpan.innerText = allData.length;
+
+    function renderTable(filterText = '') {
+      const keyword = filterText.toLowerCase().trim();
+      const filtered = keyword === '' ? allData : allData.filter(item => item.nama.toLowerCase().includes(keyword));
+      
+      if (resultCountSpan) {
+        if (keyword === '') resultCountSpan.innerHTML = `📋 Total ${filtered.length} pasaran`;
+        else resultCountSpan.innerHTML = `🔍 ${filtered.length} hasil ditemukan`;
+      }
+      
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr class="empty-row"><td colspan="5"><i class="fas fa-search" style="margin-right: 8px;"></i> Tidak ada pasaran yang cocok dengan "${escapeHtml(filterText)}"</td></tr>`;
+        return;
+      }
+      
+      let html = '';
+      filtered.forEach(item => {
+        const isSpecial = item.hari.toLowerCase().includes('libur');
+        const dayClass = isSpecial ? 'day-badge special-day' : 'day-badge';
+        
+        html += `
+          <tr>
+            <td class="pasaran-name">${escapeHtml(item.nama)}</td>
+            <td><span class="${dayClass}">${escapeHtml(item.hari)}</span></td>
+            <td><span class="time-close"><i class="far fa-hourglass-half"></i> ${escapeHtml(item.tutup)}</span></td>
+            <td><span class="time-open"><i class="fas fa-play-circle"></i> ${escapeHtml(item.buka)}</span></td>
+            <td><a href="${escapeAttr(item.url)}" target="_blank" rel="noopener noreferrer" class="site-link"><i class="fas fa-external-link-alt"></i> Kunjungi</a></td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = html;
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+      });
+    }
     
-    <!-- AOS Animation -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    function escapeAttr(str) {
+      if (!str) return '#';
+      return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+    }
     
-    <script>
-        // Inisialisasi AOS
-        AOS.init({
-            duration: 800,
-            once: true
-        });
-        
-        let originalData = [];
-        let filteredData = [];
-        let headers = { b: 'Memo Keterlambatan', c: 'Result' };
-        let metadata = {};
-        
-        // Pagination
-        let currentPage = 1;
-        let rowsPerPage = 10;
-        
-        // Load data saat halaman dimuat
-        window.onload = function() {
-            loadData();
-            loadSheetInfo();
-            updateDateTime();
-            setInterval(updateDateTime, 1000);
-        };
-        
-        // Fungsi untuk update date time
-        function updateDateTime() {
-            const now = new Date();
-            const options = { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                timeZone: 'Asia/Jakarta'
-            };
-            document.getElementById('currentDateTime').textContent = now.toLocaleDateString('id-ID', options);
-        }
-        
-        // Fungsi untuk load data dari Google Apps Script
-        function loadData() {
-            showLoading(true);
-            hideError();
-            
-            google.script.run
-                .withSuccessHandler(displayData)
-                .withFailureHandler(showError)
-                .getSheetData();
-        }
-        
-        // Fungsi untuk load info sheet
-        function loadSheetInfo() {
-            google.script.run
-                .withSuccessHandler(displaySheetInfo)
-                .withFailureHandler(console.error)
-                .getSheetInfo();
-        }
-        
-        // Fungsi untuk menampilkan data
-        function displayData(result) {
-            showLoading(false);
-            
-            if (!result.success) {
-                showError(result.message || 'Gagal memuat data');
-                return;
-            }
-            
-            // Simpan data dan metadata
-            originalData = result.data || [];
-            filteredData = [...originalData];
-            headers = result.headers || { b: 'Memo Keterlambatan', c: 'Result' };
-            metadata = result.metadata || {};
-            
-            // Update header
-            document.getElementById('headerB').textContent = headers.b;
-            document.getElementById('headerC').textContent = headers.c;
-            
-            // Update stats
-            document.getElementById('totalData').textContent = metadata.totalRows || originalData.length;
-            document.getElementById('filledData').textContent = metadata.filledRows || originalData.length;
-            document.getElementById('lastUpdate').textContent = metadata.lastUpdated || '-';
-            document.getElementById('sheetName').textContent = metadata.sheetName || 'MEMO KETERLAMBATAN';
-            
-            // Reset ke halaman pertama
-            currentPage = 1;
-            
-            // Tampilkan data
-            renderTable();
-            updatePagination();
-            
-            showToast('Data berhasil dimuat', 'success');
-        }
-        
-        // Fungsi untuk menampilkan info sheet
-        function displaySheetInfo(info) {
-            if (info.success) {
-                document.getElementById('spreadsheetName').textContent = info.spreadsheetInfo.name;
-                document.getElementById('activeSheet').textContent = info.sheetInfo.name;
-            }
-        }
-        
-        // Fungsi untuk render tabel dengan pagination
-        function renderTable() {
-            const tbody = document.getElementById('tableBody');
-            
-            if (filteredData.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="3" style="text-align: center; padding: 50px;">
-                            <i class="fas fa-search" style="font-size: 3em; color: #ccc; margin-bottom: 15px;"></i>
-                            <p style="color: var(--gray);">Tidak ada data keterlambatan ditemukan</p>
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
-            
-            // Hitung pagination
-            const start = (currentPage - 1) * rowsPerPage;
-            const end = Math.min(start + rowsPerPage, filteredData.length);
-            const pageData = filteredData.slice(start, end);
-            
-            let html = '';
-            pageData.forEach((item, index) => {
-                const rowNumber = start + index + 1;
-                const bValue = item.b || '';
-                const cValue = item.c || '';
-                
-                html += `
-                    <tr>
-                        <td class="row-number">${rowNumber}</td>
-                        <td>${bValue || '<span class="empty-data"><i class="fas fa-minus"></i> Kosong</span>'}</td>
-                        <td>${cValue || '<span class="empty-data"><i class="fas fa-minus"></i> Kosong</span>'}</td>
-                    </tr>
-                `;
-            });
-            
-            tbody.innerHTML = html;
-            
-            // Update info display
-            document.getElementById('displayInfo').innerHTML = 
-                `Menampilkan ${start + 1}-${end} dari ${filteredData.length} data`;
-        }
-        
-        // Fungsi untuk filter data
-        function filterData(event) {
-            if (event.key === 'Enter' || event.type === 'click') {
-                const searchText = document.getElementById('searchInput').value.toLowerCase();
-                
-                if (!searchText) {
-                    filteredData = [...originalData];
-                } else {
-                    filteredData = originalData.filter(item => {
-                        const bValue = (item.b || '').toLowerCase();
-                        const cValue = (item.c || '').toLowerCase();
-                        return bValue.includes(searchText) || cValue.includes(searchText);
-                    });
-                }
-                
-                currentPage = 1;
-                renderTable();
-                updatePagination();
-                
-                showToast(`Ditemukan ${filteredData.length} data`, 'success');
-            }
-        }
-        
-        // Fungsi untuk pagination
-        function updatePagination() {
-            const totalPages = Math.ceil(filteredData.length / rowsPerPage);
-            
-            document.getElementById('pageInfo').textContent = `Halaman ${currentPage} dari ${totalPages || 1}`;
-            document.getElementById('prevBtn').disabled = currentPage === 1;
-            document.getElementById('nextBtn').disabled = currentPage === totalPages || totalPages === 0;
-        }
-        
-        function prevPage() {
-            if (currentPage > 1) {
-                currentPage--;
-                renderTable();
-                updatePagination();
-            }
-        }
-        
-        function nextPage() {
-            const totalPages = Math.ceil(filteredData.length / rowsPerPage);
-            if (currentPage < totalPages) {
-                currentPage++;
-                renderTable();
-                updatePagination();
-            }
-        }
-        
-        // Fungsi untuk export ke CSV
-        function exportToCSV() {
-            if (filteredData.length === 0) {
-                showToast('Tidak ada data untuk diexport', 'error');
-                return;
-            }
-            
-            let csv = `${headers.b},${headers.c}\n`;
-            
-            filteredData.forEach(item => {
-                const bValue = (item.b || '').replace(/,/g, ';').replace(/\n/g, ' ');
-                const cValue = (item.c || '').replace(/,/g, ';').replace(/\n/g, ' ');
-                csv += `"${bValue}","${cValue}"\n`;
-            });
-            
-            downloadFile(csv, 'memo_keterlambatan.csv', 'text/csv;charset=utf-8;');
-            showToast('Data berhasil diexport ke CSV', 'success');
-        }
-        
-        // Fungsi untuk export ke Excel (XLSX)
-        function exportToExcel() {
-            if (filteredData.length === 0) {
-                showToast('Tidak ada data untuk diexport', 'error');
-                return;
-            }
-            
-            // Buat HTML table untuk Excel
-            let html = `
-                <html>
-                    <head>
-                        <meta charset="UTF-8">
-                        <title>Memo Keterlambatan Result</title>
-                    </head>
-                    <body>
-                        <table border="1">
-                            <tr>
-                                <th>No</th>
-                                <th>${headers.b}</th>
-                                <th>${headers.c}</th>
-                            </tr>
-            `;
-            
-            filteredData.forEach((item, index) => {
-                html += `
-                    <tr>
-                        <td>${index + 1}</td>
-                        <td>${item.b || ''}</td>
-                        <td>${item.c || ''}</td>
-                    </tr>
-                `;
-            });
-            
-            html += `</table></body></html>`;
-            
-            downloadFile(html, 'memo_keterlambatan.xls', 'application/vnd.ms-excel');
-            showToast('Data berhasil diexport ke Excel', 'success');
-        }
-        
-        // Fungsi untuk print data
-        function printData() {
-            const printWindow = window.open('', '_blank');
-            
-            let printContent = `
-                <html>
-                    <head>
-                        <title>Memo Keterlambatan Result</title>
-                        <style>
-                            body { font-family: Arial, sans-serif; padding: 20px; }
-                            h1 { color: #4361ee; }
-                            table { border-collapse: collapse; width: 100%; margin-top: 20px; }
-                            th { background: #4361ee; color: white; padding: 10px; }
-                            td { border: 1px solid #ddd; padding: 8px; }
-                            .footer { margin-top: 20px; color: #666; }
-                        </style>
-                    </head>
-                    <body>
-                        <h1>Memo Keterlambatan Result</h1>
-                        <p>Tanggal: ${new Date().toLocaleDateString('id-ID')}</p>
-                        <table>
-                            <tr>
-                                <th>No</th>
-                                <th>${headers.b}</th>
-                                <th>${headers.c}</th>
-                            </tr>
-            `;
-            
-            filteredData.forEach((item, index) => {
-                printContent += `
-                    <tr>
-                        <td>${index + 1}</td>
-                        <td>${item.b || '-'}</td>
-                        <td>${item.c || '-'}</td>
-                    </tr>
-                `;
-            });
-            
-            printContent += `
-                        </table>
-                        <p class="footer">Total data: ${filteredData.length}</p>
-                    </body>
-                </html>
-            `;
-            
-            printWindow.document.write(printContent);
-            printWindow.document.close();
-            printWindow.print();
-        }
-        
-        // Fungsi untuk download file
-        function downloadFile(content, fileName, mimeType) {
-            const blob = new Blob([content], { type: mimeType });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = fileName;
-            a.click();
-            URL.revokeObjectURL(url);
-        }
-        
-        // Fungsi untuk show/hide loading
-        function showLoading(show) {
-            document.getElementById('loading').style.display = show ? 'block' : 'none';
-        }
-        
-        // Fungsi untuk show error
-        function showError(message) {
-            document.getElementById('error').style.display = 'flex';
-            document.getElementById('errorMessage').textContent = message;
-            showLoading(false);
-        }
-        
-        // Fungsi untuk hide error
-        function hideError() {
-            document.getElementById('error').style.display = 'none';
-        }
-        
-        // Fungsi untuk show toast
-        function showToast(message, type = 'success') {
-            const toast = document.getElementById('toast');
-            const toastMessage = document.getElementById('toastMessage');
-            
-            toast.className = `toast ${type}`;
-            toastMessage.textContent = message;
-            toast.style.display = 'flex';
-            
-            setTimeout(() => {
-                toast.style.display = 'none';
-            }, 3000);
-        }
-        
-        // Auto refresh setiap 5 menit
-        setInterval(loadData, 300000);
-    </script>
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        renderTable(e.target.value);
+      });
+    }
+    
+    renderTable('');
+  })();
+</script>
 </body>
 </html>
