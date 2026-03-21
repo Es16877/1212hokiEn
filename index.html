@@ -16,12 +16,11 @@
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       min-height: 100vh;
-      color: #1e293b;
       position: relative;
-      background: #0a1a2a;
+      background: #0a0f1a;
     }
 
-    /* Background image dengan overlay gelap agar teks terbaca */
+    /* Background dengan overlay yang lebih halus */
     body::before {
       content: '';
       position: fixed;
@@ -34,11 +33,10 @@
       background-position: center;
       background-repeat: no-repeat;
       background-attachment: fixed;
-      opacity: 0.85;
+      opacity: 0.7;
       z-index: -2;
     }
 
-    /* Overlay semi-transparan untuk meningkatkan readability */
     body::after {
       content: '';
       position: fixed;
@@ -46,20 +44,19 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: linear-gradient(135deg, rgba(10, 26, 42, 0.75) 0%, rgba(15, 35, 55, 0.85) 100%);
+      background: linear-gradient(135deg, rgba(10, 15, 26, 0.85) 0%, rgba(20, 30, 45, 0.9) 100%);
       z-index: -1;
     }
 
-    /* Container utama */
     .main-wrapper {
-      max-width: 1400px;
+      max-width: 1440px;
       margin: 0 auto;
-      padding: 32px 28px;
+      padding: 28px 24px;
       position: relative;
       z-index: 1;
     }
 
-    /* Header section */
+    /* Header lebih elegan */
     .header-section {
       margin-bottom: 32px;
       display: flex;
@@ -67,88 +64,105 @@
       align-items: flex-end;
       flex-wrap: wrap;
       gap: 20px;
-      border-bottom: 2px solid rgba(255, 215, 150, 0.4);
       padding-bottom: 20px;
+      border-bottom: 1px solid rgba(255, 215, 150, 0.3);
     }
 
     .title-area h1 {
-      font-size: 2rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, #FFD97E 0%, #FFB347 50%, #FF8C42 100%);
+      font-size: 1.85rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #FFE5B4 0%, #FFB347 100%);
       background-clip: text;
       -webkit-background-clip: text;
       color: transparent;
-      letter-spacing: -0.3px;
+      letter-spacing: -0.5px;
       margin-bottom: 8px;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .title-area h1 i {
+      background: linear-gradient(135deg, #FFB347, #FF8C42);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-size: 1.8rem;
     }
 
     .title-area .sub {
-      color: rgba(255, 245, 220, 0.9);
-      font-size: 0.85rem;
+      color: rgba(255, 245, 220, 0.75);
+      font-size: 0.8rem;
       font-weight: 500;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 12px;
+      flex-wrap: wrap;
     }
 
-    .title-area .sub i {
-      font-size: 12px;
-      color: #FFB347;
-    }
-
-    /* Stats info - glassmorphism effect */
-    .stats-info {
-      background: rgba(255, 255, 255, 0.12);
-      backdrop-filter: blur(10px);
-      border-radius: 60px;
-      padding: 8px 20px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-      border: 1px solid rgba(255, 215, 150, 0.3);
+    .title-area .sub span {
       display: flex;
-      gap: 20px;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .stats-info {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      border-radius: 40px;
+      padding: 8px 24px;
+      border: 1px solid rgba(255, 215, 150, 0.25);
+      display: flex;
+      gap: 24px;
     }
 
     .stats-info .stat-item {
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: 0.85rem;
-      font-weight: 600;
+      font-size: 0.8rem;
+      font-weight: 500;
       color: #FFE5B4;
     }
 
     .stats-info .stat-item i {
       color: #FFB347;
-      font-size: 14px;
+      font-size: 0.9rem;
     }
 
-    /* Search dan filter bar - glassmorphism */
-    .search-bar {
-      background: rgba(255, 255, 255, 0.1);
+    /* Search bar lebih minimalis */
+    .search-section {
+      margin-bottom: 28px;
+    }
+
+    .search-card {
+      background: rgba(20, 30, 45, 0.6);
       backdrop-filter: blur(12px);
       border-radius: 20px;
-      padding: 8px 8px 8px 24px;
-      margin-bottom: 28px;
+      padding: 6px 6px 6px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
       gap: 12px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-      border: 1px solid rgba(255, 215, 150, 0.35);
+      border: 1px solid rgba(255, 215, 150, 0.2);
+      transition: all 0.3s ease;
     }
 
-    .search-input-wrapper {
+    .search-card:focus-within {
+      border-color: rgba(255, 180, 70, 0.6);
+      box-shadow: 0 0 0 2px rgba(255, 180, 70, 0.2);
+    }
+
+    .search-input-group {
       flex: 1;
-      min-width: 240px;
       display: flex;
       align-items: center;
       gap: 12px;
     }
 
-    .search-input-wrapper i {
-      color: #FFD97E;
+    .search-input-group i {
+      color: #FFB347;
       font-size: 1rem;
     }
 
@@ -165,172 +179,211 @@
     }
 
     #searchInput::placeholder {
-      color: rgba(255, 235, 200, 0.6);
-      font-weight: 400;
+      color: rgba(255, 235, 200, 0.5);
     }
 
-    .result-count {
-      background: rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(4px);
+    .result-badge {
+      background: rgba(255, 180, 70, 0.2);
       padding: 6px 16px;
-      border-radius: 40px;
-      font-size: 0.8rem;
+      border-radius: 30px;
+      font-size: 0.75rem;
       font-weight: 600;
       color: #FFD97E;
-      border: 1px solid rgba(255, 215, 150, 0.3);
+      border: 1px solid rgba(255, 180, 70, 0.3);
     }
 
-    /* Tabel modern dengan efek glass */
-    .table-container {
-      background: rgba(15, 35, 55, 0.6);
+    /* Tabel dengan desain lebih rapi */
+    .table-wrapper {
+      background: rgba(15, 25, 40, 0.5);
       backdrop-filter: blur(12px);
       border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 215, 150, 0.2);
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-      overflow-x: auto;
-      border: 1px solid rgba(255, 215, 150, 0.25);
-      transition: all 0.2s;
     }
 
     .schedule-table {
       width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
-      font-size: 0.9rem;
-      min-width: 780px;
-    }
-
-    .schedule-table thead tr {
-      background: rgba(0, 0, 0, 0.35);
-      border-bottom: 1px solid rgba(255, 215, 150, 0.3);
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      min-width: 1000px;
     }
 
     .schedule-table th {
-      padding: 18px 20px;
+      padding: 16px 20px;
       text-align: left;
-      font-weight: 700;
-      font-size: 0.85rem;
+      font-weight: 600;
+      font-size: 0.75rem;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.8px;
       color: #FFD97E;
-      border-bottom: 2px solid rgba(255, 185, 80, 0.5);
-      background: rgba(0, 0, 0, 0.25);
+      background: rgba(0, 0, 0, 0.4);
+      border-bottom: 1px solid rgba(255, 215, 150, 0.25);
     }
 
     .schedule-table td {
-      padding: 16px 20px;
-      border-bottom: 1px solid rgba(255, 215, 150, 0.15);
-      color: #F5EAD8;
-      font-weight: 500;
-      transition: background 0.2s;
+      padding: 14px 20px;
+      border-bottom: 1px solid rgba(255, 215, 150, 0.1);
+      color: #E8E2D4;
+      vertical-align: middle;
     }
 
-    .schedule-table tbody tr:hover td {
-      background: rgba(255, 215, 150, 0.1);
+    .schedule-table tbody tr {
+      transition: all 0.2s ease;
     }
 
-    /* Kolom pasaran */
-    .pasaran-name {
-      font-weight: 800;
-      color: #FFD97E;
-      font-size: 0.95rem;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    .schedule-table tbody tr:hover {
+      background: rgba(255, 215, 150, 0.08);
     }
 
-    /* Badge untuk hari operasional */
+    /* Logo & Nama Pasaran */
+    .market-cell {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .market-logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      object-fit: cover;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 6px;
+      border: 1px solid rgba(255, 215, 150, 0.3);
+      transition: transform 0.2s;
+    }
+
+    .market-logo:hover {
+      transform: scale(1.05);
+    }
+
+    .market-name {
+      font-weight: 700;
+      color: #FFE5B4;
+      font-size: 0.9rem;
+    }
+
+    /* Badge Hari */
     .day-badge {
-      background: rgba(255, 200, 120, 0.2);
-      backdrop-filter: blur(4px);
-      padding: 4px 12px;
-      border-radius: 30px;
-      font-size: 0.75rem;
+      background: rgba(255, 200, 120, 0.15);
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.7rem;
       font-weight: 600;
       display: inline-block;
-      color: #FFE0A3;
+      color: #FFDCA8;
       border: 1px solid rgba(255, 200, 100, 0.3);
+      white-space: nowrap;
     }
 
-    .special-day {
-      background: rgba(255, 150, 70, 0.25);
-      color: #FFC285;
-      border-color: rgba(255, 140, 50, 0.5);
+    .day-badge.special {
+      background: rgba(255, 140, 70, 0.2);
+      color: #FFB87A;
+      border-color: rgba(255, 120, 50, 0.4);
     }
 
     /* Waktu */
-    .time-close {
+    .time-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
       font-weight: 600;
-      color: #FFA559;
-      background: rgba(255, 100, 50, 0.15);
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 24px;
-      font-size: 0.8rem;
-      backdrop-filter: blur(4px);
-      border: 1px solid rgba(255, 140, 80, 0.3);
+      white-space: nowrap;
+    }
+
+    .time-close {
+      background: rgba(255, 100, 70, 0.15);
+      color: #FF9F6E;
+      border: 1px solid rgba(255, 120, 80, 0.3);
     }
 
     .time-open {
-      font-weight: 700;
-      color: #7ED47E;
-      background: rgba(80, 200, 80, 0.15);
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 24px;
-      font-size: 0.8rem;
-      backdrop-filter: blur(4px);
-      border: 1px solid rgba(100, 220, 100, 0.3);
+      background: rgba(100, 200, 100, 0.15);
+      color: #8FD48F;
+      border: 1px solid rgba(100, 200, 100, 0.3);
     }
 
-    /* Link website */
-    .site-link {
+    /* Link Group */
+    .link-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .btn-link {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      background: rgba(255, 200, 100, 0.2);
-      backdrop-filter: blur(4px);
-      padding: 6px 14px;
-      border-radius: 40px;
-      text-decoration: none;
-      color: #FFD97E;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 30px;
+      font-size: 0.7rem;
       font-weight: 600;
-      font-size: 0.75rem;
+      text-decoration: none;
       transition: all 0.2s;
-      white-space: nowrap;
-      border: 1px solid rgba(255, 200, 100, 0.4);
+      background: rgba(255, 200, 100, 0.12);
+      border: 1px solid rgba(255, 200, 100, 0.3);
+      color: #FFDCA8;
     }
 
-    .site-link i {
-      font-size: 12px;
+    .btn-link i {
+      font-size: 0.7rem;
     }
 
-    .site-link:hover {
+    .btn-link:hover {
       background: #FFB347;
-      color: #1e2a3a;
-      transform: translateY(-1px);
       border-color: #FFB347;
+      color: #1a2a3a;
+      transform: translateY(-2px);
     }
 
-    /* Empty state */
-    .empty-row td {
+    .btn-live {
+      background: rgba(80, 200, 80, 0.15);
+      border-color: rgba(80, 200, 80, 0.4);
+      color: #8FD48F;
+    }
+
+    .btn-live:hover {
+      background: #6FCF6F;
+      border-color: #6FCF6F;
+      color: #1a2a3a;
+    }
+
+    /* Empty State */
+    .empty-state {
       text-align: center;
-      padding: 48px 20px !important;
+      padding: 60px 20px !important;
+    }
+
+    .empty-state i {
+      font-size: 3rem;
+      color: #FFB347;
+      margin-bottom: 16px;
+      opacity: 0.6;
+    }
+
+    .empty-state p {
       color: #FFD97E;
-      font-weight: 500;
+      font-size: 0.9rem;
     }
 
     /* Footer */
     .footer-note {
-      margin-top: 32px;
+      margin-top: 24px;
       text-align: center;
+      padding: 16px 0 8px;
       font-size: 0.7rem;
-      color: rgba(255, 235, 200, 0.7);
-      padding: 20px 0 8px;
-      border-top: 1px solid rgba(255, 215, 150, 0.25);
+      color: rgba(255, 235, 200, 0.6);
+      border-top: 1px solid rgba(255, 215, 150, 0.2);
     }
 
-    /* Scrollbar styling */
+    /* Scrollbar */
     ::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
+      width: 6px;
+      height: 6px;
     }
 
     ::-webkit-scrollbar-track {
@@ -343,221 +396,239 @@
       border-radius: 10px;
     }
 
-    ::-webkit-scrollbar-thumb:hover {
-      background: #FFD97E;
-    }
-
     /* Responsive */
     @media (max-width: 768px) {
       .main-wrapper {
-        padding: 20px 16px;
+        padding: 16px;
       }
+      
       .header-section {
         flex-direction: column;
         align-items: flex-start;
       }
+      
       .stats-info {
         width: 100%;
-        justify-content: space-between;
+        justify-content: space-around;
       }
-      .search-bar {
-        padding: 12px 20px;
+      
+      .title-area h1 {
+        font-size: 1.5rem;
       }
-      .schedule-table th, 
+      
+      .schedule-table th,
       .schedule-table td {
-        padding: 12px 14px;
+        padding: 12px 12px;
+      }
+      
+      .market-logo {
+        width: 32px;
+        height: 32px;
+      }
+      
+      .btn-link {
+        padding: 4px 10px;
+        font-size: 0.65rem;
       }
     }
   </style>
 </head>
 <body>
 <div class="main-wrapper">
-  <!-- Header -->
+  <!-- Header Section -->
   <div class="header-section">
     <div class="title-area">
-      <h1><i class="fas fa-calendar-alt" style="color: #FFB347; margin-right: 10px;"></i> Jadwal Live Draw Togel</h1>
+      <h1>
+        <i class="fas fa-calendar-alt"></i>
+        Jadwal Live Draw
+      </h1>
       <div class="sub">
-        <i class="fas fa-clock"></i> Update realtime · Waktu Indonesia Barat (WIB)
-        <i class="fas fa-circle" style="font-size: 6px; margin-left: 4px; color: #7ED47E;"></i>
+        <span><i class="fas fa-clock"></i> Waktu Indonesia Barat (WIB)</span>
+        <span><i class="fas fa-sync-alt"></i> Update Real-time</span>
+        <span><i class="fas fa-tv"></i> Live Streaming Tersedia</span>
       </div>
     </div>
     <div class="stats-info">
-      <div class="stat-item"><i class="fas fa-chart-line"></i> <span id="totalCount">0</span> Pasaran Aktif</div>
-      <div class="stat-item"><i class="fas fa-globe-asia"></i> Worldwide Pools</div>
+      <div class="stat-item"><i class="fas fa-chart-line"></i> <span id="totalCount">0</span> Pasaran</div>
+      <div class="stat-item"><i class="fas fa-video"></i> <span id="liveCount">0</span> Live Draw</div>
+      <div class="stat-item"><i class="fas fa-globe"></i> International Pools</div>
     </div>
   </div>
 
-  <!-- Search & Filter -->
-  <div class="search-bar">
-    <div class="search-input-wrapper">
-      <i class="fas fa-search"></i>
-      <input type="text" id="searchInput" placeholder="Cari pasaran... (contoh: Sydney, Macau, Singapore, Hongkong)" autocomplete="off">
+  <!-- Search Section -->
+  <div class="search-section">
+    <div class="search-card">
+      <div class="search-input-group">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="Cari pasaran... (Sydney, Macau, Singapore, Hongkong, dll)" autocomplete="off">
+      </div>
+      <div class="result-badge" id="resultCountText">📋 Memuat data...</div>
     </div>
-    <div class="result-count" id="resultCountText">📋 Memuat data...</div>
   </div>
 
-  <!-- Tabel Jadwal -->
-  <div class="table-container">
-    <table class="schedule-table" id="scheduleTable">
+  <!-- Table Section -->
+  <div class="table-wrapper">
+    <table class="schedule-table">
       <thead>
         <tr>
-          <th>Nama Pasaran</th>
-          <th>Hari Operasional</th>
-          <th>Jam Tutup (WIB)</th>
-          <th>Jam Buka / Result (WIB)</th>
-          <th>Situs Resmi</th>
+          <th style="width: 28%">PASARAN</th>
+          <th style="width: 18%">JADWAL OPERASIONAL</th>
+          <th style="width: 16%">JAM TUTUP</th>
+          <th style="width: 16%">RESULT / DRAW</th>
+          <th style="width: 22%">AKSES CEPAT</th>
         </tr>
       </thead>
       <tbody id="tableBody">
-        <tr><td colspan="5" style="text-align:center; padding: 40px; color: #FFD97E;">Memuat data jadwal... <i class="fas fa-spinner fa-pulse"></i></td></tr>
+        <tr>
+          <td colspan="5" class="empty-state">
+            <i class="fas fa-spinner fa-pulse"></i>
+            <p>Memuat data jadwal...</p>
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>
+  
   <div class="footer-note">
-    <i class="far fa-bell"></i> Jadwal dapat berubah sewaktu-waktu. Selalu cek informasi terbaru dari masing-masing pasaran.
+    <i class="fas fa-info-circle"></i> Jadwal dapat berubah sewaktu-waktu. Klik "Result" untuk melihat hasil undian, "Live Draw" untuk menyaksikan langsung.
   </div>
 </div>
 
-<!-- Data Tabel Tersembunyi (sumber data) -->
-<table style="display: none;">
-  <tbody id="dataSource">
-    <tr><td>HOKIDRAW</td><td>SENIN - MINGGU</td><td>RESULT 24 KALI</td><td>1 JAM SEKALI</td><td><a href="https://hokidraw.com/">Klik di sini</a></td></tr>
-    <tr><td>TOTOMACAU 4D PAGI</td><td>SENIN - MINGGU</td><td>00:00 WIB</td><td>00:15 WIB</td><td><a href="https://totomacau-pools.us/">Klik di sini</a></td></tr>
-    <tr><td>KENTUCKY MIDDAY</td><td>SENIN - MINGGU</td><td>00:05 WIB</td><td>00:20 WIB</td><td><a href="https://www.kylottery.com/apps/draw_games">Klik disini</a></td></tr>
-    <tr><td>FLORIDA MIDDAY</td><td>SENIN - MINGGU</td><td>00:20 WIB</td><td>00:30 WIB</td><td><a href="https://floridalottery.com/games/draw-games/pick-4">Klik disini</a></td></tr>
-    <tr><td>HUAHIN 0100</td><td>SENIN - MINGGU</td><td>00:45 WIB</td><td>01:00 WIB</td><td><a href="https://huahinlottery.com/">Klik disini</a></td></tr>
-    <tr><td>BANGKOK 0130</td><td>SENIN - MINGGU</td><td>01:15 WIB</td><td>01:30 WIB</td><td><a href="https://bangkokpoolstoday.com/">Klik disini</a></td></tr>
-    <tr><td>NEWYORK MIDDAY</td><td>SENIN - MINGGU</td><td>01:15 WIB</td><td>01:25 WIB</td><td><a href="https://nylottery.ny.gov/">Klik disini</a></td></tr>
-    <tr><td>CAROLINA DAY</td><td>SENIN - MINGGU</td><td>01:45 WIB</td><td>02:00 WIB</td><td><a href="https://nclottery.com/Pick4">Klik di sini</a></td></tr>
-    <tr><td>BRUNEI 02</td><td>SENIN - MINGGU</td><td>02:30 WIB</td><td>02:45 WIB</td><td><a href="https://bruneipools.com/">Klik di sini</a></td></tr>
-    <tr><td>OREGON 03</td><td>SENIN - MINGGU</td><td>02:50 WIB</td><td>03:00 WIB</td><td><a href="https://www.oregonlottery.org/pick-4/winning-numbers/">Klik di sini</a></td></tr>
-    <tr><td>OREGON 06</td><td>SENIN - MINGGU</td><td>05:50 WIB</td><td>06:00 WIB</td><td><a href="https://www.oregonlottery.org/pick-4/winning-numbers/">Klik di sini</a></td></tr>
-    <tr><td>CALIFORNIA</td><td>SENIN - MINGGU</td><td>08:25 WIB</td><td>08:30 WIB</td><td><a href="https://www.calottery.com/draw-games/daily-4">Klik disini</a></td></tr>
-    <tr><td>FLORIDA EVENING</td><td>SENIN - MINGGU</td><td>08:35 WIB</td><td>08:45 WIB</td><td><a href="https://floridalottery.com/games/draw-games/pick-4">Klik disini</a></td></tr>
-    <tr><td>OREGON 09</td><td>SENIN - MINGGU</td><td>08:50 WIB</td><td>09:00 WIB</td><td><a href="https://www.oregonlottery.org/pick-4/winning-numbers/">Klik disini</a></td></tr>
-    <tr><td>BANGKOK 0930</td><td>SENIN - MINGGU</td><td>09:15 WIB</td><td>09:30 WIB</td><td><a href="https://bangkokpoolstoday.com/">Klik di sini</a></td></tr>
-    <tr><td>NEWYORK EVENING</td><td>SENIN - MINGGU</td><td>09:25 WIB</td><td>09:35 WIB</td><td><a href="https://nylottery.ny.gov/">Klik di sini</a></td></tr>
-    <tr><td>KENTUCKY EVENING</td><td>SENIN - MINGGU</td><td>09:45 WIB</td><td>10:00 WIB</td><td><a href="https://www.kylottery.com/apps/draw_games">Klik di sini</a></td></tr>
-    <tr><td>CAROLINA EVENING</td><td>SENIN - MINGGU</td><td>10:17 WIB</td><td>10:22 WIB</td><td><a href="https://nclottery.com/Pick4">Klik di sini</a></td></tr>
-    <tr><td>TOTOCAMBODIA</td><td>SENIN - MINGGU</td><td>10:45 WIB</td><td>11:00 WIB</td><td><a href="https://totocambodialive.com/">Klik di sini</a></td></tr>
-    <tr><td>CHELSEA 11</td><td>SENIN - MINGGU</td><td>11:00 WIB</td><td>11:15 WIB</td><td><a href="https://chelseapools.co.uk/">Klik di sini</a></td></tr>
-    <tr><td>OREGON 12</td><td>SENIN - MINGGU</td><td>11:50 WIB</td><td>12:00 WIB</td><td><a href="https://www.oregonlottery.org/pick-4/winning-numbers/">Klik di sini</a></td></tr>
-    <tr><td>POIPET 12</td><td>SENIN - MINGGU</td><td>12:15 WIB</td><td>12:30 WIB</td><td><a href="https://poipetlottery.com/">Klik di sini</a></td></tr>
-    <tr><td>BULLSEYE</td><td>SENIN - MINGGU</td><td>12:00 WIB</td><td>12:15 WIB</td><td><a href="https://mylotto.co.nz/results/bullseye">Klik di sini</a></td></tr>
-    <tr><td>TOTOMACAU 4D SIANG</td><td>SENIN - MINGGU</td><td>13:00 WIB</td><td>13:15 WIB</td><td><a href="https://totomacau-pools.us/">Klik di sini</a></td></tr>
-    <tr><td>SYDNEY</td><td>SENIN - MINGGU</td><td>13:49 WIB</td><td>14:05 WIB</td><td><a href="https://sydneylottobaru.site/">Klik disini</a></td></tr>
-    <tr><td>BRUNEI 14</td><td>SENIN - MINGGU</td><td>14:30 WIB</td><td>14:45 WIB</td><td><a href="https://bruneipools.com/">Klik di sini</a></td></tr>
-    <tr><td>CHELSEA 15</td><td>SENIN - MINGGU</td><td>15:00 WIB</td><td>15:15 WIB</td><td><a href="https://chelseapools.co.uk/">Klik di sini</a></td></tr>
-    <tr><td>POIPET 15</td><td>SENIN - MINGGU</td><td>15:15 WIB</td><td>15:30 WIB</td><td><a href="https://poipetlottery.com/">Klik di sini</a></td></tr>
-    <tr><td>TOTOMALI 1530</td><td>SENIN - MINGGU</td><td>15:15 WIB</td><td>15:30 WIB</td><td><a href="https://totomali.com/">Klik di sini</a></td></tr>
-    <tr><td>TOTOMACAU 4D SORE</td><td>SENIN - MINGGU</td><td>16:00 WIB</td><td>16:15 WIB</td><td><a href="https://totomacau-pools.us/">Klik di sini</a></td></tr>
-    <tr><td>HUAHIN 1630</td><td>SENIN - MINGGU</td><td>16:15 WIB</td><td>16:30 WIB</td><td><a href="https://huahinlottery.com/">Klik di sini</a></td></tr>
-    <tr><td>KINGKONG 4D SORE</td><td>SENIN - MINGGU</td><td>17:00 WIB</td><td>17:15 WIB</td><td><a href="https://kingkongpools.id/">Klik di sini</a></td></tr>
-    <tr><td>SINGAPORE</td><td>SELASA & JUMAT LIBUR</td><td>17:30 WIB</td><td>17:45 WIB</td><td><a href="https://www.singaporepools.com.sg/landing/en/Pages/index.html">Klik di sini</a></td></tr>
-    <tr><td>MAGNUM4D</td><td>RABU, SABTU, & MINGGU</td><td>18:10 WIB</td><td>18:40 WIB</td><td><a href="https://www.magnum4d.my/en">Klik di sini</a></td></tr>
-    <tr><td>TOTOMACAU 4D MALAM I</td><td>SENIN - MINGGU</td><td>19:00 WIB</td><td>19:15 WIB</td><td><a href="https://totomacau-pools.us/">Klik di sini</a></td></tr>
-    <tr><td>CHELSEA 19</td><td>SENIN - MINGGU</td><td>19:00 WIB</td><td>19:15 WIB</td><td><a href="https://chelseapools.co.uk/">Klik di sini</a></td></tr>
-    <tr><td>POIPET 19</td><td>SENIN - MINGGU</td><td>19:30 WIB</td><td>19:45 WIB</td><td><a href="https://poipetlottery.com/">Klik di sini</a></td></tr>
-    <tr><td>PCSO</td><td>MINGGU LIBUR</td><td>19:50 WIB</td><td>20:10 WIB</td><td><a href="https://www.pcso.gov.ph/">Klik disini</a></td></tr>
-    <tr><td>TOTOMALI 2030</td><td>SENIN - MINGGU</td><td>20:15 WIB</td><td>20:30 WIB</td><td><a href="https://totomali.com/">Klik di sini</a></td></tr>
-    <tr><td>HUAHIN 2100</td><td>SENIN - MINGGU</td><td>20:45 WIB</td><td>21:00 WIB</td><td><a href="https://huahinlottery.com/">Klik di sini</a></td></tr>
-    <tr><td>CHELSEA 21</td><td>SENIN - MINGGU</td><td>21:00 WIB</td><td>21:15 WIB</td><td><a href="https://chelseapools.co.uk/">Klik di sini</a></td></tr>
-    <tr><td>NEVADA</td><td>SENIN - MINGGU</td><td>21:15 WIB</td><td>21:30 WIB</td><td><a href="https://www.nevadalottery.us/">Klik di sini</a></td></tr>
-    <tr><td>BRUNEI 21</td><td>SENIN - MINGGU</td><td>21:30 WIB</td><td>21:45 WIB</td><td><a href="https://bruneipools.com/">Klik di sini</a></td></tr>
-    <tr><td>TOTOMACAU 4D MALAM II</td><td>SENIN - MINGGU</td><td>22:00 WIB</td><td>22:15 WIB</td><td><a href="https://totomacau-pools.us/">Klik di sini</a></td></tr>
-    <tr><td>POIPET 22</td><td>SENIN - MINGGU</td><td>22:30 WIB</td><td>22:45 WIB</td><td><a href="https://poipetlottery.com/">Klik di sini</a></td></tr>
-    <tr><td>HONGKONG</td><td>SENIN - MINGGU</td><td>22:59 WIB</td><td>23:15 WIB</td><td><a href="https://lottohongkong.fun/">Klik di sini</a></td></tr>
-    <tr><td>TOTOMACAU 4D MALAM III</td><td>SENIN - MINGGU</td><td>23:00 WIB</td><td>23:15 WIB</td><td><a href="https://totomacau-pools.us/">Klik di sini</a></td></tr>
-    <tr><td>TOTOMALI 2330</td><td>SENIN - MINGGU</td><td>23:15 WIB</td><td>23:30 WIB</td><td><a href="https://totomali.com/">Klik di sini</a></td></tr>
-    <tr><td>KINGKONG 4D MALAM</td><td>SENIN - MINGGU</td><td>23:30 WIB</td><td>23:45 WIB</td><td><a href="https://kingkongpools.id/">Klik di sini</a></td></tr>
-  </tbody>
-</table>
-
 <script>
-  (function() {
-    const sourceRows = document.querySelectorAll('#dataSource tr');
-    const tbody = document.getElementById('tableBody');
-    const searchInput = document.getElementById('searchInput');
-    const totalSpan = document.getElementById('totalCount');
-    const resultCountSpan = document.getElementById('resultCountText');
+  // Data Pasaran Lengkap
+  const marketData = [
+    { nama: "HOKIDRAW", hari: "Senin - Minggu", tutup: "Setiap Jam", buka: "1 Jam Sekali", urlResult: "https://hokidraw.com/", liveDraw: "https://www.youtube.com/@hokidraw-official", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/HKDW/icon/icon.png" },
+    { nama: "TOTO MACAU PAGI", hari: "Senin - Minggu", tutup: "00:00 WIB", buka: "00:15 WIB", urlResult: "https://totomacaunew.us/", liveDraw: "https://kick.com/live-ttm4d", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/TTM6/icon/icon.png" },
+    { nama: "KENTUCKY MIDDAY", hari: "Senin - Minggu", tutup: "00:05 WIB", buka: "00:20 WIB", urlResult: "https://play.kylottery.com/en-us/playnow/pick4.html", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/KTM/icon/icon.png" },
+    { nama: "FLORIDA MIDDAY", hari: "Senin - Minggu", tutup: "00:20 WIB", buka: "00:30 WIB", urlResult: "https://floridalottery.com/games/draw-games/pick-4", liveDraw: "https://www.youtube.com/@floridalottery", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/FLM/icon/icon.png" },
+    { nama: "HUAHIN 0100", hari: "Senin - Minggu", tutup: "00:45 WIB", buka: "01:00 WIB", urlResult: "https://huahinlottery.com/", liveDraw: "https://www.youtube.com/@huahinlottery5727", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/HUA03/icon/icon.png" },
+    { nama: "BANGKOK 0130", hari: "Senin - Minggu", tutup: "01:15 WIB", buka: "01:30 WIB", urlResult: "https://bangkokpoolstoday.com", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/BKK02/icon/icon.png" },
+    { nama: "NEW YORK MIDDAY", hari: "Senin - Minggu", tutup: "01:15 WIB", buka: "01:25 WIB", urlResult: "https://nylottery.ny.gov/", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/NYM/icon/icon.png" },
+    { nama: "NORTH CAROLINA DAY", hari: "Senin - Minggu", tutup: "01:45 WIB", buka: "02:00 WIB", urlResult: "https://www.wral.com/entertainment/lottery/", liveDraw: "https://www.wral.com/evening-pick-3-pick-4-and-cash-5/1075494/", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/NCD/icon/icon.png" },
+    { nama: "BRUNEI 02", hari: "Senin - Minggu", tutup: "02:30 WIB", buka: "02:45 WIB", urlResult: "https://bruneipools.com/", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/BRU14/icon/icon.png" },
+    { nama: "OREGON 03", hari: "Senin - Minggu", tutup: "02:50 WIB", buka: "03:00 WIB", urlResult: "https://www.oregonlottery.org/pick-4/winning-numbers/", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/ORG03/icon/icon.png" },
+    { nama: "OREGON 06", hari: "Senin - Minggu", tutup: "05:50 WIB", buka: "06:00 WIB", urlResult: "https://www.oregonlottery.org/pick-4/winning-numbers/", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/ORG03/icon/icon.png" },
+    { nama: "CALIFORNIA", hari: "Senin - Minggu", tutup: "08:25 WIB", buka: "08:30 WIB", urlResult: "https://www.calottery.com/en/draw-games/daily-4", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/CLF/icon/icon.png" },
+    { nama: "FLORIDA EVENING", hari: "Senin - Minggu", tutup: "08:35 WIB", buka: "08:45 WIB", urlResult: "https://floridalottery.com/games/draw-games/pick-4", liveDraw: "https://www.youtube.com/@floridalottery", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/FLE/icon/icon.png" },
+    { nama: "OREGON 09", hari: "Senin - Minggu", tutup: "08:50 WIB", buka: "09:00 WIB", urlResult: "https://www.oregonlottery.org/pick-4/winning-numbers/", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/ORG03/icon/icon.png" },
+    { nama: "BANGKOK 0930", hari: "Senin - Minggu", tutup: "09:15 WIB", buka: "09:30 WIB", urlResult: "https://bangkokpoolstoday.com", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/BKK02/icon/icon.png" },
+    { nama: "NEW YORK EVENING", hari: "Senin - Minggu", tutup: "09:25 WIB", buka: "09:35 WIB", urlResult: "https://nylottery.ny.gov/", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/NYE/icon/icon.png" },
+    { nama: "KENTUCKY EVENING", hari: "Senin - Minggu", tutup: "09:45 WIB", buka: "10:00 WIB", urlResult: "https://play.kylottery.com/en-us/playnow/pick4.html", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/KTE/icon/icon.png" },
+    { nama: "CAROLINA EVENING", hari: "Senin - Minggu", tutup: "10:17 WIB", buka: "10:22 WIB", urlResult: "https://www.wral.com/evening-pick-3-pick-4-and-cash-5/1075494/", liveDraw: "https://www.wral.com/evening-pick-3-pick-4-and-cash-5/1075494/", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/NCD2/icon/icon.png" },
+    { nama: "TOTO CAMBODIA", hari: "Senin - Minggu", tutup: "10:45 WIB", buka: "11:00 WIB", urlResult: "https://totocambodialive.com/index.html", liveDraw: "https://www.youtube.com/@TotoCambodiaOfficial", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/TTC/icon/icon.png" },
+    { nama: "CHELSEA 11", hari: "Senin - Minggu", tutup: "11:00 WIB", buka: "11:15 WIB", urlResult: "https://chelseapools.co.uk/", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/CHS11/icon/icon.png" },
+    { nama: "OREGON 12", hari: "Senin - Minggu", tutup: "11:50 WIB", buka: "12:00 WIB", urlResult: "https://www.oregonlottery.org/pick-4/winning-numbers/", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/ORG03/icon/icon.png" },
+    { nama: "POIPET 12", hari: "Senin - Minggu", tutup: "12:15 WIB", buka: "12:30 WIB", urlResult: "https://poipetlottery.com/", liveDraw: "https://poipetlottery.com/liveresult", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/PPT19/icon/icon.png" },
+    { nama: "TOTO MACAU SIANG", hari: "Senin - Minggu", tutup: "13:00 WIB", buka: "13:15 WIB", urlResult: "https://totomacaunew.us/", liveDraw: "https://kick.com/live-ttm4d", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/TTM6/icon/icon.png" },
+    { nama: "BULLSEYE", hari: "Senin - Minggu", tutup: "12:00 WIB", buka: "12:15 WIB", urlResult: "https://mylotto.co.nz/results/bullseye", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/BLE/icon/icon.png" },
+    { nama: "SYDNEY", hari: "Senin - Minggu", tutup: "13:49 WIB", buka: "14:05 WIB", urlResult: "https://lottosydney.fun/", liveDraw: "https://kick.com/sydney-lotto-official", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/SYDLT/icon/icon.png" },
+    { nama: "JAKARTA POOLS", hari: "Senin - Minggu", tutup: "14:00 WIB", buka: "14:15 WIB", urlResult: "https://www.jakartapool.com/", liveDraw: "https://kick.com/studio-live-game", logo: "https://cdn.areabermain.club/assets/cdn/az4/2025/08/18/20250818/57824d39d3564ef0ebad1b4297693dc9/logo-jakarta-pools-jpg.png" },
+    { nama: "BRUNEI 14", hari: "Senin - Minggu", tutup: "14:30 WIB", buka: "14:45 WIB", urlResult: "https://bruneipools.com/", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/BRU14/icon/icon.png" },
+    { nama: "CHELSEA 15", hari: "Senin - Minggu", tutup: "15:00 WIB", buka: "15:15 WIB", urlResult: "https://chelseapools.co.uk/", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/CHS11/icon/icon.png" },
+    { nama: "POIPET 15", hari: "Senin - Minggu", tutup: "15:15 WIB", buka: "15:30 WIB", urlResult: "https://poipetlottery.com/", liveDraw: "https://poipetlottery.com/liveresult", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/PPT19/icon/icon.png" },
+    { nama: "TOTOMALI", hari: "Senin - Minggu", tutup: "15:15 WIB", buka: "15:30 WIB", urlResult: "https://totomali.com/", liveDraw: "https://totomali.com/live-draw.html", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/MALI15/icon/icon.png" },
+    { nama: "TOTO MACAU SORE", hari: "Senin - Minggu", tutup: "16:00 WIB", buka: "16:15 WIB", urlResult: "https://totomacaunew.us/", liveDraw: "https://kick.com/live-ttm4d", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/TTM6/icon/icon.png" },
+    { nama: "HUAHIN 1630", hari: "Senin - Minggu", tutup: "16:15 WIB", buka: "16:30 WIB", urlResult: "https://huahinlottery.com/", liveDraw: "https://www.youtube.com/@huahinlottery5727", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/HUA03/icon/icon.png" },
+    { nama: "KING KONG 4D", hari: "Senin - Minggu", tutup: "17:00 WIB", buka: "17:15 WIB", urlResult: "https://kingkongpools.id/", liveDraw: "https://kick.com/king-kong-pools", logo: "https://cdn.areabermain.club/assets/cdn/az4/2025/08/18/20250818/32f87d6c932b0d2eee9b6e1c9028ab41/logo-2.png" },
+    { nama: "SINGAPORE", hari: "Selasa & Jumat Libur", tutup: "17:30 WIB", buka: "17:45 WIB", urlResult: "https://www.singaporepools.com.sg/landing/en/Pages/index.html", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/SGD/icon/icon.png" },
+    { nama: "MAGNUM 4D", hari: "Rabu, Sabtu, Minggu", tutup: "18:10 WIB", buka: "18:40 WIB", urlResult: "https://www.magnum4d.my/en/", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/MAG/icon/icon.png" },
+    { nama: "CHELSEA 19", hari: "Senin - Minggu", tutup: "19:00 WIB", buka: "19:15 WIB", urlResult: "https://chelseapools.co.uk/", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/CHS11/icon/icon.png" },
+    { nama: "TOTO MACAU MALAM", hari: "Senin - Minggu", tutup: "19:00 WIB", buka: "19:15 WIB", urlResult: "https://totomacaunew.us/", liveDraw: "https://kick.com/live-ttm4d", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/TTM6/icon/icon.png" },
+    { nama: "POIPET 19", hari: "Senin - Minggu", tutup: "19:30 WIB", buka: "19:45 WIB", urlResult: "https://poipetlottery.com/", liveDraw: "https://poipetlottery.com/liveresult", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/PPT19/icon/icon.png" },
+    { nama: "PCSO", hari: "Minggu Libur", tutup: "19:50 WIB", buka: "20:10 WIB", urlResult: "https://www.pcso.gov.ph/", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/PCO/icon/icon.png" },
+    { nama: "HUAHIN 2100", hari: "Senin - Minggu", tutup: "20:45 WIB", buka: "21:00 WIB", urlResult: "https://huahinlottery.com/", liveDraw: "https://www.youtube.com/@huahinlottery5727", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/HUA03/icon/icon.png" },
+    { nama: "CHELSEA 21", hari: "Senin - Minggu", tutup: "21:00 WIB", buka: "21:15 WIB", urlResult: "https://chelseapools.co.uk/", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/CHS11/icon/icon.png" },
+    { nama: "NEVADA", hari: "Senin - Minggu", tutup: "21:15 WIB", buka: "21:30 WIB", urlResult: "https://www.nevadalottery.us/", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/NVD/icon/icon.png" },
+    { nama: "BRUNEI 21", hari: "Senin - Minggu", tutup: "21:30 WIB", buka: "21:45 WIB", urlResult: "https://bruneipools.com/", liveDraw: null, logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/BRU14/icon/icon.png" },
+    { nama: "TOTO MACAU MALAM II", hari: "Senin - Minggu", tutup: "22:00 WIB", buka: "22:15 WIB", urlResult: "https://totomacaunew.us/", liveDraw: "https://kick.com/live-ttm4d", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/TTM6/icon/icon.png" },
+    { nama: "POIPET 22", hari: "Senin - Minggu", tutup: "22:30 WIB", buka: "22:45 WIB", urlResult: "https://poipetlottery.com/", liveDraw: "https://poipetlottery.com/liveresult", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/PPT19/icon/icon.png" },
+    { nama: "HONGKONG", hari: "Senin - Minggu", tutup: "22:59 WIB", buka: "23:15 WIB", urlResult: "https://hongkonglotto.today", liveDraw: "https://kick.com/hongkong-lotto-official", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/HKGLT/icon/icon.png" },
+    { nama: "TOTO MACAU MALAM III", hari: "Senin - Minggu", tutup: "23:00 WIB", buka: "23:15 WIB", urlResult: "https://totomacaunew.us/", liveDraw: "https://kick.com/live-ttm4d", logo: "https://png-res.png999.com/assets/LOTTERY-Web/cardList/TTM6/icon/icon.png" }
+  ];
 
-    let allData = [];
+  const tbody = document.getElementById('tableBody');
+  const searchInput = document.getElementById('searchInput');
+  const totalSpan = document.getElementById('totalCount');
+  const liveCountSpan = document.getElementById('liveCount');
+  const resultCountSpan = document.getElementById('resultCountText');
 
-    sourceRows.forEach(row => {
-      const cells = row.querySelectorAll('td');
-      if (cells.length >= 5) {
-        const nama = cells[0]?.innerText?.trim() || '';
-        const hari = cells[1]?.innerText?.trim() || '';
-        const tutup = cells[2]?.innerText?.trim() || '';
-        const buka = cells[3]?.innerText?.trim() || '';
-        const linkCell = cells[4];
-        let url = '#';
-        const anchor = linkCell.querySelector('a');
-        if (anchor && anchor.href) url = anchor.href;
-        
-        if (nama) {
-          allData.push({ nama, hari, tutup, buka, url });
-        }
+  // Hitung total dan live draw count
+  const totalMarkets = marketData.length;
+  const totalLive = marketData.filter(m => m.liveDraw).length;
+  if (totalSpan) totalSpan.innerText = totalMarkets;
+  if (liveCountSpan) liveCountSpan.innerText = totalLive;
+
+  function renderTable(filterText = '') {
+    const keyword = filterText.toLowerCase().trim();
+    const filtered = keyword === '' ? marketData : marketData.filter(item => item.nama.toLowerCase().includes(keyword));
+    
+    if (resultCountSpan) {
+      if (keyword === '') resultCountSpan.innerHTML = `📋 Total ${filtered.length} Pasaran`;
+      else resultCountSpan.innerHTML = `🔍 ${filtered.length} Hasil Ditemukan`;
+    }
+    
+    if (filtered.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="5" class="empty-state">
+            <i class="fas fa-search"></i>
+            <p>Tidak ada pasaran yang cocok dengan "${escapeHtml(filterText)}"</p>
+          </td>
+        </tr>
+      `;
+      return;
+    }
+    
+    let html = '';
+    filtered.forEach(item => {
+      const isSpecial = item.hari.toLowerCase().includes('libur');
+      const dayClass = isSpecial ? 'day-badge special' : 'day-badge';
+      
+      let linksHtml = `<a href="${escapeAttr(item.urlResult)}" target="_blank" rel="noopener noreferrer" class="btn-link"><i class="fas fa-chart-simple"></i> Result</a>`;
+      if (item.liveDraw) {
+        linksHtml += `<a href="${escapeAttr(item.liveDraw)}" target="_blank" rel="noopener noreferrer" class="btn-link btn-live"><i class="fas fa-play-circle"></i> Live Draw</a>`;
       }
+      
+      html += `
+        <tr>
+          <td>
+            <div class="market-cell">
+              <img class="market-logo" src="${escapeAttr(item.logo)}" alt="${escapeHtml(item.nama)}" onerror="this.src='https://placehold.co/40x40?text=?'">
+              <span class="market-name">${escapeHtml(item.nama)}</span>
+            </div>
+          </td>
+          <td><span class="${dayClass}">${escapeHtml(item.hari)}</span></td>
+          <td><span class="time-badge time-close"><i class="far fa-clock"></i> ${escapeHtml(item.tutup)}</span></td>
+          <td><span class="time-badge time-open"><i class="fas fa-trophy"></i> ${escapeHtml(item.buka)}</span></td>
+          <td><div class="link-group">${linksHtml}</div></td>
+        </tr>
+      `;
     });
+    tbody.innerHTML = html;
+  }
 
-    if (totalSpan) totalSpan.innerText = allData.length;
-
-    function renderTable(filterText = '') {
-      const keyword = filterText.toLowerCase().trim();
-      const filtered = keyword === '' ? allData : allData.filter(item => item.nama.toLowerCase().includes(keyword));
-      
-      if (resultCountSpan) {
-        if (keyword === '') resultCountSpan.innerHTML = `📋 Total ${filtered.length} pasaran`;
-        else resultCountSpan.innerHTML = `🔍 ${filtered.length} hasil ditemukan`;
-      }
-      
-      if (filtered.length === 0) {
-        tbody.innerHTML = `<tr class="empty-row"><td colspan="5"><i class="fas fa-search" style="margin-right: 8px;"></i> Tidak ada pasaran yang cocok dengan "${escapeHtml(filterText)}"</td></tr>`;
-        return;
-      }
-      
-      let html = '';
-      filtered.forEach(item => {
-        const isSpecial = item.hari.toLowerCase().includes('libur');
-        const dayClass = isSpecial ? 'day-badge special-day' : 'day-badge';
-        
-        html += `
-          <tr>
-            <td class="pasaran-name">${escapeHtml(item.nama)}</td>
-            <td><span class="${dayClass}">${escapeHtml(item.hari)}</span></td>
-            <td><span class="time-close"><i class="far fa-hourglass-half"></i> ${escapeHtml(item.tutup)}</span></td>
-            <td><span class="time-open"><i class="fas fa-play-circle"></i> ${escapeHtml(item.buka)}</span></td>
-            <td><a href="${escapeAttr(item.url)}" target="_blank" rel="noopener noreferrer" class="site-link"><i class="fas fa-external-link-alt"></i> Kunjungi</a></td>
-          </tr>
-        `;
-      });
-      tbody.innerHTML = html;
-    }
-
-    function escapeHtml(str) {
-      if (!str) return '';
-      return str.replace(/[&<>]/g, function(m) {
-        if (m === '&') return '&amp;';
-        if (m === '<') return '&lt;';
-        if (m === '>') return '&gt;';
-        return m;
-      });
-    }
-    
-    function escapeAttr(str) {
-      if (!str) return '#';
-      return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
-    }
-    
-    if (searchInput) {
-      searchInput.addEventListener('input', (e) => {
-        renderTable(e.target.value);
-      });
-    }
-    
-    renderTable('');
-  })();
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    });
+  }
+  
+  function escapeAttr(str) {
+    if (!str) return '#';
+    return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+  }
+  
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      renderTable(e.target.value);
+    });
+  }
+  
+  renderTable('');
 </script>
 </body>
 </html>
