@@ -1,612 +1,353 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>Jadwal Live Draw Togel | Update Harian</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rekap TO Harian</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f3f7f5;
+    --card:#ffffff;
+    --card-alt:#f7faf8;
+    --border:#dfe8e3;
+    --border-strong:#c9d6cf;
+    --text:#0f231b;
+    --muted:#5c6c65;
+    --faint:#8a978f;
+    --accent:#0f9d70;
+    --accent-dark:#0b7a56;
+    --accent-soft:#e5f5ee;
+    --danger:#c0392b;
+    --danger-soft:#fbeae8;
+    --radius-lg:16px;
+    --radius-md:12px;
+    --radius-sm:8px;
+    --shadow:0 1px 2px rgba(15,35,27,0.04), 0 12px 28px -16px rgba(15,35,27,0.16);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; padding:48px 20px 80px; background:
+      radial-gradient(1200px 480px at 50% -10%, #eaf6ef 0%, var(--bg) 55%);
+    color:var(--text);
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  }
+  .wrap{max-width:780px; margin:0 auto}
 
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      min-height: 100vh;
-      position: relative;
-      background: #0a0f1a;
-    }
+  /* header */
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--accent-dark); background:var(--accent-soft);
+    padding:5px 10px; border-radius:999px; margin-bottom:14px;
+  }
+  .eyebrow .dot{width:6px; height:6px; border-radius:50%; background:var(--accent)}
+  h1{
+    font-family:'Space Grotesk',sans-serif; font-size:30px; font-weight:600;
+    letter-spacing:-0.01em; margin:0 0 8px; line-height:1.15;
+  }
+  p.sub{color:var(--muted); font-size:15px; line-height:1.6; margin:0 0 36px; max-width:56ch}
 
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-image: url('https://cdn.areabermain.club/assets/cdn/az9/2026/01/15/20260115/a738fa90e31c8d69e13f64c585c7b386/background-web-hokijitu.jpg');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      opacity: 0.7;
-      z-index: -2;
-    }
+  /* step cards */
+  .step{
+    background:var(--card); border:1px solid var(--border); border-radius:var(--radius-lg);
+    box-shadow:var(--shadow); padding:22px 24px 24px; margin-bottom:18px;
+  }
+  .step-head{display:flex; align-items:center; gap:12px; margin-bottom:14px}
+  .step-num{
+    flex:0 0 auto; width:26px; height:26px; border-radius:50%;
+    background:var(--text); color:#fff; font-family:'Space Grotesk',sans-serif;
+    font-size:13px; font-weight:600; display:flex; align-items:center; justify-content:center;
+  }
+  .step-title{font-size:15px; font-weight:600}
+  .step-desc{font-size:13px; color:var(--muted); margin:2px 0 0}
 
-    body::after {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(135deg, rgba(10, 15, 26, 0.85) 0%, rgba(20, 30, 45, 0.9) 100%);
-      z-index: -1;
-    }
+  textarea{
+    width:100%; border:1px solid var(--border); border-radius:var(--radius-sm);
+    padding:12px 14px; font-family:'JetBrains Mono',ui-monospace,monospace; font-size:12.5px;
+    line-height:1.6; resize:vertical; color:var(--text); background:var(--card-alt);
+    transition:border-color .15s;
+  }
+  textarea:focus{outline:none; border-color:var(--accent); background:#fff}
+  #rawData{height:150px}
+  #gameList{height:120px}
+  .hint{color:var(--faint); font-size:12px; margin-top:8px; line-height:1.5}
 
-    .main-wrapper {
-      max-width: 1440px;
-      margin: 0 auto;
-      padding: 28px 24px;
-      position: relative;
-      z-index: 1;
-    }
+  /* buttons */
+  button{
+    font-family:'Inter',sans-serif; border:none; border-radius:var(--radius-sm);
+    padding:11px 20px; font-size:14px; font-weight:600; cursor:pointer;
+    display:inline-flex; align-items:center; gap:7px; transition:background .15s, border-color .15s, color .15s;
+  }
+  .btn-primary{background:var(--accent); color:#fff}
+  .btn-primary:hover{background:var(--accent-dark)}
+  .btn-outline{
+    background:#fff; color:var(--text); border:1px solid var(--border-strong);
+    padding:9px 16px; font-size:13px;
+  }
+  .btn-outline:hover{border-color:var(--accent); color:var(--accent-dark)}
+  .btn-outline svg{width:14px; height:14px}
 
-    /* Header Section */
-    .header-section {
-      margin-bottom: 32px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      flex-wrap: wrap;
-      gap: 20px;
-      padding-bottom: 20px;
-      border-bottom: 1px solid rgba(255, 215, 150, 0.3);
-    }
+  .generate-row{display:flex; align-items:center; gap:14px; flex-wrap:wrap}
+  #status{font-size:13px; font-weight:500}
+  #status.error{color:var(--danger)}
+  #status.ok{color:var(--accent-dark)}
 
-    .title-area h1 {
-      font-size: 1.85rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, #FFE5B4 0%, #FFB347 100%);
-      background-clip: text;
-      -webkit-background-clip: text;
-      color: transparent;
-      letter-spacing: -0.5px;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+  /* results */
+  .result-head{display:flex; align-items:center; gap:12px; margin-bottom:16px}
 
-    .title-area h1 i {
-      background: linear-gradient(135deg, #FFB347, #FF8C42);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      font-size: 1.8rem;
-    }
+  .stats{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:18px}
+  .stat{
+    background:var(--card-alt); border:1px solid var(--border); border-radius:var(--radius-md);
+    padding:14px 16px;
+  }
+  .stat-label{font-size:11px; font-weight:600; letter-spacing:.04em; text-transform:uppercase; color:var(--faint)}
+  .stat-value{
+    font-family:'JetBrains Mono',monospace; font-size:19px; font-weight:600;
+    margin-top:4px; color:var(--text);
+  }
+  .stat.warn .stat-value{color:var(--danger)}
 
-    .title-area .sub {
-      color: rgba(255, 245, 220, 0.75);
-      font-size: 0.8rem;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
+  table{width:100%; border-collapse:collapse; font-size:13px; border-radius:var(--radius-md); overflow:hidden}
+  thead th{
+    background:var(--card-alt); color:var(--muted); font-weight:600; font-size:11.5px;
+    letter-spacing:.03em; text-transform:uppercase; text-align:left; padding:9px 12px;
+    border-bottom:1px solid var(--border);
+  }
+  thead th:last-child{text-align:right}
+  tbody td{padding:9px 12px; border-bottom:1px solid var(--border); font-size:13px}
+  tbody tr:last-child td{border-bottom:none}
+  tbody td:last-child{
+    text-align:right; font-family:'JetBrains Mono',monospace; font-size:12.5px;
+  }
+  tbody tr:nth-child(even){background:#fbfcfb}
+  .missing{color:var(--danger); font-style:italic; font-size:12px}
 
-    .title-area .sub span {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .stats-info {
-      background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(12px);
-      border-radius: 40px;
-      padding: 8px 24px;
-      border: 1px solid rgba(255, 215, 150, 0.25);
-      display: flex;
-      gap: 24px;
-    }
-
-    .stats-info .stat-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: #FFE5B4;
-    }
-
-    .stats-info .stat-item i {
-      color: #FFB347;
-      font-size: 0.9rem;
-    }
-
-    /* Search Section */
-    .search-section {
-      margin-bottom: 28px;
-    }
-
-    .search-card {
-      background: rgba(20, 30, 45, 0.6);
-      backdrop-filter: blur(12px);
-      border-radius: 20px;
-      padding: 6px 6px 6px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 12px;
-      border: 1px solid rgba(255, 215, 150, 0.2);
-      transition: all 0.3s ease;
-    }
-
-    .search-card:focus-within {
-      border-color: rgba(255, 180, 70, 0.6);
-      box-shadow: 0 0 0 2px rgba(255, 180, 70, 0.2);
-    }
-
-    .search-input-group {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .search-input-group i {
-      color: #FFB347;
-      font-size: 1rem;
-    }
-
-    #searchInput {
-      flex: 1;
-      border: none;
-      padding: 12px 0;
-      font-size: 0.9rem;
-      font-family: 'Inter', sans-serif;
-      background: transparent;
-      outline: none;
-      color: #FFF5E6;
-      font-weight: 500;
-    }
-
-    #searchInput::placeholder {
-      color: rgba(255, 235, 200, 0.5);
-    }
-
-    .result-badge {
-      background: rgba(255, 180, 70, 0.2);
-      padding: 6px 16px;
-      border-radius: 30px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: #FFD97E;
-      border: 1px solid rgba(255, 180, 70, 0.3);
-    }
-
-    /* Table Wrapper */
-    .table-wrapper {
-      background: rgba(15, 25, 40, 0.5);
-      backdrop-filter: blur(12px);
-      border-radius: 24px;
-      overflow-x: auto;
-      border: 1px solid rgba(255, 215, 150, 0.2);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    }
-
-    .schedule-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.85rem;
-      min-width: 800px;
-    }
-
-    .schedule-table th {
-      padding: 16px 20px;
-      text-align: left;
-      font-weight: 600;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: #FFD97E;
-      background: rgba(0, 0, 0, 0.4);
-      border-bottom: 1px solid rgba(255, 215, 150, 0.25);
-    }
-
-    .schedule-table td {
-      padding: 14px 20px;
-      border-bottom: 1px solid rgba(255, 215, 150, 0.1);
-      color: #E8E2D4;
-      vertical-align: middle;
-    }
-
-    .schedule-table tbody tr {
-      transition: all 0.2s ease;
-    }
-
-    .schedule-table tbody tr:hover {
-      background: rgba(255, 215, 150, 0.08);
-    }
-
-    /* Market Cell - Tanpa Logo */
-    .market-cell {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .market-name {
-      font-weight: 700;
-      color: #FFE5B4;
-      font-size: 0.9rem;
-      line-height: 1.3;
-    }
-
-    /* Badge Hari */
-    .day-badge {
-      background: rgba(255, 200, 120, 0.15);
-      padding: 5px 12px;
-      border-radius: 20px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      display: inline-block;
-      color: #FFDCA8;
-      border: 1px solid rgba(255, 200, 100, 0.3);
-      white-space: nowrap;
-    }
-
-    .day-badge.special {
-      background: rgba(255, 140, 70, 0.2);
-      color: #FFB87A;
-      border-color: rgba(255, 120, 50, 0.4);
-    }
-
-    /* Time Badge */
-    .time-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 5px 12px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      white-space: nowrap;
-    }
-
-    .time-close {
-      background: rgba(255, 100, 70, 0.15);
-      color: #FF9F6E;
-      border: 1px solid rgba(255, 120, 80, 0.3);
-    }
-
-    .time-open {
-      background: rgba(100, 200, 100, 0.15);
-      color: #8FD48F;
-      border: 1px solid rgba(100, 200, 100, 0.3);
-    }
-
-    /* Link Group */
-    .link-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .btn-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 12px;
-      border-radius: 30px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      text-decoration: none;
-      transition: all 0.2s;
-      background: rgba(255, 200, 100, 0.12);
-      border: 1px solid rgba(255, 200, 100, 0.3);
-      color: #FFDCA8;
-    }
-
-    .btn-link i {
-      font-size: 0.7rem;
-    }
-
-    .btn-link:hover {
-      background: #FFB347;
-      border-color: #FFB347;
-      color: #1a2a3a;
-      transform: translateY(-2px);
-    }
-
-    .btn-live {
-      background: rgba(80, 200, 80, 0.15);
-      border-color: rgba(80, 200, 80, 0.4);
-      color: #8FD48F;
-    }
-
-    .btn-live:hover {
-      background: #6FCF6F;
-      border-color: #6FCF6F;
-      color: #1a2a3a;
-    }
-
-    /* Empty State */
-    .empty-state {
-      text-align: center;
-      padding: 60px 20px !important;
-    }
-
-    .empty-state i {
-      font-size: 3rem;
-      color: #FFB347;
-      margin-bottom: 16px;
-      opacity: 0.6;
-    }
-
-    .empty-state p {
-      color: #FFD97E;
-      font-size: 0.9rem;
-    }
-
-    /* Footer */
-    .footer-note {
-      margin-top: 24px;
-      text-align: center;
-      padding: 16px 0 8px;
-      font-size: 0.7rem;
-      color: rgba(255, 235, 200, 0.6);
-      border-top: 1px solid rgba(255, 215, 150, 0.2);
-    }
-
-    /* Scrollbar */
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: rgba(0, 0, 0, 0.3);
-      border-radius: 10px;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: #FFB347;
-      border-radius: 10px;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .main-wrapper {
-        padding: 16px;
-      }
-      
-      .header-section {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      
-      .stats-info {
-        width: 100%;
-        justify-content: space-around;
-      }
-      
-      .title-area h1 {
-        font-size: 1.5rem;
-      }
-      
-      .schedule-table th,
-      .schedule-table td {
-        padding: 12px 12px;
-      }
-      
-      .btn-link {
-        padding: 4px 10px;
-        font-size: 0.65rem;
-      }
-    }
-  </style>
+  .copy-row{display:flex; gap:10px; flex-wrap:wrap; margin-top:18px}
+  .empty-state{
+    text-align:center; padding:36px 16px; color:var(--faint); font-size:13px;
+    border:1px dashed var(--border-strong); border-radius:var(--radius-md);
+  }
+</style>
 </head>
 <body>
-<div class="main-wrapper">
-  <!-- Header Section -->
-  <div class="header-section">
-    <div class="title-area">
-      <h1>
-        <i class="fas fa-calendar-alt"></i>
-        Jadwal Live Draw
-      </h1>
-      <div class="sub">
-        <span><i class="fas fa-clock"></i> Waktu Indonesia Barat (WIB)</span>
-        <span><i class="fas fa-sync-alt"></i> Update Real-time</span>
-        <span><i class="fas fa-tv"></i> Live Streaming Tersedia</span>
+<div class="wrap">
+
+  <span class="eyebrow"><span class="dot"></span>Alat internal</span>
+  <h1>💰 Rekap TO harian</h1>
+  <p class="sub">Tempel data laporan mentah, atur daftar game, lalu generate. Semua perhitungan berjalan langsung di browser kamu — tidak ada data yang dikirim keluar.</p>
+
+  <div class="step">
+    <div class="step-head">
+      <div class="step-num">1</div>
+      <div>
+        <div class="step-title">Paste data laporan</div>
+        <p class="step-desc">Format tab-separated: baris nama game, baris Player/TO/WIN-LOSE, lalu baris data.</p>
       </div>
     </div>
-    <div class="stats-info">
-      <div class="stat-item"><i class="fas fa-chart-line"></i> <span id="totalCount">0</span> Pasaran</div>
-      <div class="stat-item"><i class="fas fa-video"></i> <span id="liveCount">0</span> Live Draw</div>
-      <div class="stat-item"><i class="fas fa-globe"></i> International Pools</div>
+    <textarea id="rawData" placeholder="Tempel data mentah di sini..."></textarea>
+    <div class="hint">Dari Excel: select semua cell yang relevan → copy → paste langsung ke sini. Excel otomatis memakai tab sebagai pemisah kolom.</div>
+  </div>
+
+  <div class="step">
+    <div class="step-head">
+      <div class="step-num">2</div>
+      <div>
+        <div class="step-title">Daftar game & urutannya</div>
+        <p class="step-desc">Satu nama per baris. Urutan di sini menentukan urutan hasil.</p>
+      </div>
+    </div>
+    <textarea id="gameList">BANGKOK 0130
+BANGKOK 0930
+BRUNEI02
+BRUNEI14
+BRUNEI21
+CHELSEA11
+CHELSEA15
+CHELSEA19
+CHELSEA21
+HUAHIN0100
+HUAHIN1630
+HUAHIN2100
+NEVADA
+POIPET12
+POIPET15
+POIPET19
+POIPET22
+TOTO CAMBODIA LIVE
+TOTOMALI1530
+TOTOMALI2030
+TOTOMALI2330
+HOKI DRAW</textarea>
+  </div>
+
+  <div class="step">
+    <div class="generate-row">
+      <button id="genBtn" class="btn-primary">
+        <svg viewBox="0 0 20 20" fill="none" width="15" height="15"><path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Generate rekap
+      </button>
+      <span id="status"></span>
     </div>
   </div>
 
-  <!-- Search Section -->
-  <div class="search-section">
-    <div class="search-card">
-      <div class="search-input-group">
-        <i class="fas fa-search"></i>
-        <input type="text" id="searchInput" placeholder="Cari pasaran... (Sydney, Macau, Singapore, Hongkong, dll)" autocomplete="off">
-      </div>
-      <div class="result-badge" id="resultCountText">📋 Memuat data...</div>
+  <div class="step">
+    <div class="result-head">
+      <div class="step-num">3</div>
+      <div class="step-title">Hasil</div>
+    </div>
+
+    <div id="resultBody">
+      <div class="empty-state">Belum ada hasil — isi data di atas lalu klik generate.</div>
     </div>
   </div>
 
-  <!-- Table Section -->
-  <div class="table-wrapper">
-    <table class="schedule-table">
-      <thead>
-        <tr>
-          <th style="width: 30%">PASARAN</th>
-          <th style="width: 20%">JADWAL OPERASIONAL</th>
-          <th style="width: 16%">JAM TUTUP</th>
-          <th style="width: 16%">RESULT / DRAW</th>
-          <th style="width: 18%">AKSES CEPAT</th>
-        </tr>
-      </thead>
-      <tbody id="tableBody">
-        <tr>
-          <td colspan="5" class="empty-state">
-            <i class="fas fa-spinner fa-pulse"></i>
-            <p>Memuat data jadwal...</p>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  
-  <div class="footer-note">
-    <i class="fas fa-info-circle"></i> Jadwal dapat berubah sewaktu-waktu. Klik "Result" untuk melihat hasil undian, "Live Draw" untuk menyaksikan langsung.
-  </div>
 </div>
 
 <script>
-  // Data Pasaran Lengkap (tanpa properti logo)
-  const marketData = [
-    { nama: "HOKIDRAW", hari: "Senin - Minggu", tutup: "Setiap Jam", buka: "1 Jam Sekali", urlResult: "https://hokidraw.com/", liveDraw: "https://www.youtube.com/@hokidraw-official" },
-    { nama: "TOTO MACAU PAGI", hari: "Senin - Minggu", tutup: "00:00 WIB", buka: "00:15 WIB", urlResult: "https://totomacaunew.us/", liveDraw: "https://kick.com/live-ttm4d" },
-    { nama: "KENTUCKY MIDDAY", hari: "Senin - Minggu", tutup: "00:05 WIB", buka: "00:20 WIB", urlResult: "https://play.kylottery.com/en-us/playnow/pick4.html", liveDraw: null },
-    { nama: "FLORIDA MIDDAY", hari: "Senin - Minggu", tutup: "00:20 WIB", buka: "00:30 WIB", urlResult: "https://floridalottery.com/games/draw-games/pick-4", liveDraw: "https://www.youtube.com/@floridalottery" },
-    { nama: "HUAHIN 0100", hari: "Senin - Minggu", tutup: "00:45 WIB", buka: "01:00 WIB", urlResult: "https://huahinlottery.com/", liveDraw: "https://www.youtube.com/@huahinlottery5727" },
-    { nama: "BANGKOK 0130", hari: "Senin - Minggu", tutup: "01:15 WIB", buka: "01:30 WIB", urlResult: "https://bangkokpoolstoday.com", liveDraw: null },
-    { nama: "NEW YORK MIDDAY", hari: "Senin - Minggu", tutup: "01:15 WIB", buka: "01:25 WIB", urlResult: "https://nylottery.ny.gov/", liveDraw: null },
-    { nama: "NORTH CAROLINA DAY", hari: "Senin - Minggu", tutup: "01:45 WIB", buka: "02:00 WIB", urlResult: "https://www.wral.com/entertainment/lottery/", liveDraw: "https://www.wral.com/evening-pick-3-pick-4-and-cash-5/1075494/" },
-    { nama: "BRUNEI 02", hari: "Senin - Minggu", tutup: "02:30 WIB", buka: "02:45 WIB", urlResult: "https://bruneipools.com/", liveDraw: null },
-    { nama: "OREGON 03", hari: "Senin - Minggu", tutup: "02:50 WIB", buka: "03:00 WIB", urlResult: "https://www.oregonlottery.org/pick-4/winning-numbers/", liveDraw: null },
-    { nama: "OREGON 06", hari: "Senin - Minggu", tutup: "05:50 WIB", buka: "06:00 WIB", urlResult: "https://www.oregonlottery.org/pick-4/winning-numbers/", liveDraw: null },
-    { nama: "CALIFORNIA", hari: "Senin - Minggu", tutup: "08:25 WIB", buka: "08:30 WIB", urlResult: "https://www.calottery.com/en/draw-games/daily-4", liveDraw: null },
-    { nama: "FLORIDA EVENING", hari: "Senin - Minggu", tutup: "08:35 WIB", buka: "08:45 WIB", urlResult: "https://floridalottery.com/games/draw-games/pick-4", liveDraw: "https://www.youtube.com/@floridalottery" },
-    { nama: "OREGON 09", hari: "Senin - Minggu", tutup: "08:50 WIB", buka: "09:00 WIB", urlResult: "https://www.oregonlottery.org/pick-4/winning-numbers/", liveDraw: null },
-    { nama: "BANGKOK 0930", hari: "Senin - Minggu", tutup: "09:15 WIB", buka: "09:30 WIB", urlResult: "https://bangkokpoolstoday.com", liveDraw: null },
-    { nama: "NEW YORK EVENING", hari: "Senin - Minggu", tutup: "09:25 WIB", buka: "09:35 WIB", urlResult: "https://nylottery.ny.gov/", liveDraw: null },
-    { nama: "KENTUCKY EVENING", hari: "Senin - Minggu", tutup: "09:45 WIB", buka: "10:00 WIB", urlResult: "https://play.kylottery.com/en-us/playnow/pick4.html", liveDraw: null },
-    { nama: "CAROLINA EVENING", hari: "Senin - Minggu", tutup: "10:17 WIB", buka: "10:22 WIB", urlResult: "https://www.wral.com/evening-pick-3-pick-4-and-cash-5/1075494/", liveDraw: "https://www.wral.com/evening-pick-3-pick-4-and-cash-5/1075494/" },
-    { nama: "TOTO CAMBODIA", hari: "Senin - Minggu", tutup: "10:45 WIB", buka: "11:00 WIB", urlResult: "https://totocambodialive.com/index.html", liveDraw: "https://www.youtube.com/@TotoCambodiaOfficial" },
-    { nama: "CHELSEA 11", hari: "Senin - Minggu", tutup: "11:00 WIB", buka: "11:15 WIB", urlResult: "https://chelseapools.co.uk/", liveDraw: null },
-    { nama: "OREGON 12", hari: "Senin - Minggu", tutup: "11:50 WIB", buka: "12:00 WIB", urlResult: "https://www.oregonlottery.org/pick-4/winning-numbers/", liveDraw: null },
-    { nama: "POIPET 12", hari: "Senin - Minggu", tutup: "12:15 WIB", buka: "12:30 WIB", urlResult: "https://poipetlottery.com/", liveDraw: "https://poipetlottery.com/liveresult" },
-    { nama: "TOTO MACAU SIANG", hari: "Senin - Minggu", tutup: "13:00 WIB", buka: "13:15 WIB", urlResult: "https://totomacaunew.us/", liveDraw: "https://kick.com/live-ttm4d" },
-    { nama: "BULLSEYE", hari: "Senin - Minggu", tutup: "12:00 WIB", buka: "12:15 WIB", urlResult: "https://mylotto.co.nz/results/bullseye", liveDraw: null },
-    { nama: "SYDNEY", hari: "Senin - Minggu", tutup: "13:49 WIB", buka: "14:05 WIB", urlResult: "https://lottosydney.fun/", liveDraw: "https://kick.com/sydney-lotto-official" },
-    { nama: "JAKARTA POOLS", hari: "Senin - Minggu", tutup: "14:00 WIB", buka: "14:15 WIB", urlResult: "https://www.jakartapool.com/", liveDraw: "https://kick.com/studio-live-game" },
-    { nama: "BRUNEI 14", hari: "Senin - Minggu", tutup: "14:30 WIB", buka: "14:45 WIB", urlResult: "https://bruneipools.com/", liveDraw: null },
-    { nama: "CHELSEA 15", hari: "Senin - Minggu", tutup: "15:00 WIB", buka: "15:15 WIB", urlResult: "https://chelseapools.co.uk/", liveDraw: null },
-    { nama: "POIPET 15", hari: "Senin - Minggu", tutup: "15:15 WIB", buka: "15:30 WIB", urlResult: "https://poipetlottery.com/", liveDraw: "https://poipetlottery.com/liveresult" },
-    { nama: "TOTOMALI", hari: "Senin - Minggu", tutup: "15:15 WIB", buka: "15:30 WIB", urlResult: "https://totomali.com/", liveDraw: "https://totomali.com/live-draw.html" },
-    { nama: "TOTO MACAU SORE", hari: "Senin - Minggu", tutup: "16:00 WIB", buka: "16:15 WIB", urlResult: "https://totomacaunew.us/", liveDraw: "https://kick.com/live-ttm4d" },
-    { nama: "HUAHIN 1630", hari: "Senin - Minggu", tutup: "16:15 WIB", buka: "16:30 WIB", urlResult: "https://huahinlottery.com/", liveDraw: "https://www.youtube.com/@huahinlottery5727" },
-    { nama: "KING KONG 4D", hari: "Senin - Minggu", tutup: "17:00 WIB", buka: "17:15 WIB", urlResult: "https://kingkongpools.id/", liveDraw: "https://kick.com/king-kong-pools" },
-    { nama: "SINGAPORE", hari: "Selasa & Jumat Libur", tutup: "17:30 WIB", buka: "17:45 WIB", urlResult: "https://www.singaporepools.com.sg/landing/en/Pages/index.html", liveDraw: null },
-    { nama: "MAGNUM 4D", hari: "Rabu, Sabtu, Minggu", tutup: "18:10 WIB", buka: "18:40 WIB", urlResult: "https://www.magnum4d.my/en/", liveDraw: null },
-    { nama: "CHELSEA 19", hari: "Senin - Minggu", tutup: "19:00 WIB", buka: "19:15 WIB", urlResult: "https://chelseapools.co.uk/", liveDraw: null },
-    { nama: "TOTO MACAU MALAM", hari: "Senin - Minggu", tutup: "19:00 WIB", buka: "19:15 WIB", urlResult: "https://totomacaunew.us/", liveDraw: "https://kick.com/live-ttm4d" },
-    { nama: "POIPET 19", hari: "Senin - Minggu", tutup: "19:30 WIB", buka: "19:45 WIB", urlResult: "https://poipetlottery.com/", liveDraw: "https://poipetlottery.com/liveresult" },
-    { nama: "PCSO", hari: "Minggu Libur", tutup: "19:50 WIB", buka: "20:10 WIB", urlResult: "https://www.pcso.gov.ph/", liveDraw: null },
-    { nama: "HUAHIN 2100", hari: "Senin - Minggu", tutup: "20:45 WIB", buka: "21:00 WIB", urlResult: "https://huahinlottery.com/", liveDraw: "https://www.youtube.com/@huahinlottery5727" },
-    { nama: "CHELSEA 21", hari: "Senin - Minggu", tutup: "21:00 WIB", buka: "21:15 WIB", urlResult: "https://chelseapools.co.uk/", liveDraw: null },
-    { nama: "NEVADA", hari: "Senin - Minggu", tutup: "21:15 WIB", buka: "21:30 WIB", urlResult: "https://www.nevadalottery.us/", liveDraw: null },
-    { nama: "BRUNEI 21", hari: "Senin - Minggu", tutup: "21:30 WIB", buka: "21:45 WIB", urlResult: "https://bruneipools.com/", liveDraw: null },
-    { nama: "TOTO MACAU MALAM II", hari: "Senin - Minggu", tutup: "22:00 WIB", buka: "22:15 WIB", urlResult: "https://totomacaunew.us/", liveDraw: "https://kick.com/live-ttm4d" },
-    { nama: "POIPET 22", hari: "Senin - Minggu", tutup: "22:30 WIB", buka: "22:45 WIB", urlResult: "https://poipetlottery.com/", liveDraw: "https://poipetlottery.com/liveresult" },
-    { nama: "HONGKONG", hari: "Senin - Minggu", tutup: "22:59 WIB", buka: "23:15 WIB", urlResult: "https://hongkonglotto.today", liveDraw: "https://kick.com/hongkong-lotto-official" },
-    { nama: "TOTO MACAU MALAM III", hari: "Senin - Minggu", tutup: "23:00 WIB", buka: "23:15 WIB", urlResult: "https://totomacaunew.us/", liveDraw: "https://kick.com/live-ttm4d" }
-  ];
+function normalizeName(name){
+  return name.trim().toUpperCase().replace(/\s+/g, ' ');
+}
 
-  const tbody = document.getElementById('tableBody');
-  const searchInput = document.getElementById('searchInput');
-  const totalSpan = document.getElementById('totalCount');
-  const liveCountSpan = document.getElementById('liveCount');
-  const resultCountSpan = document.getElementById('resultCountText');
+function parseNumber(str){
+  if(!str) return 0;
+  const n = parseFloat(str.replace(/,/g, ''));
+  return isNaN(n) ? 0 : n;
+}
 
-  const totalMarkets = marketData.length;
-  const totalLive = marketData.filter(m => m.liveDraw).length;
-  if (totalSpan) totalSpan.innerText = totalMarkets;
-  if (liveCountSpan) liveCountSpan.innerText = totalLive;
+function formatNumber(n){
+  return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
 
-  function renderTable(filterText = '') {
-    const keyword = filterText.toLowerCase().trim();
-    const filtered = keyword === '' ? marketData : marketData.filter(item => item.nama.toLowerCase().includes(keyword));
-    
-    if (resultCountSpan) {
-      if (keyword === '') resultCountSpan.innerHTML = `📋 Total ${filtered.length} Pasaran`;
-      else resultCountSpan.innerHTML = `🔍 ${filtered.length} Hasil Ditemukan`;
+function parseReport(raw){
+  const lines = raw.split(/\r?\n/).filter(l => l.trim().length > 0);
+  if(lines.length < 3){
+    throw new Error("Data kurang dari 3 baris. Pastikan kamu paste header nama game, header Player/TO/WIN-LOSE, dan baris data.");
+  }
+  const header1 = lines[0].split('\t');
+  const dataRow = lines[2].split('\t');
+
+  // 5 kolom pertama = No, Date, Jumlah Pemain, Jumlah TO, Jumlah Menang Kalah
+  const games = header1.slice(5);
+  const toMap = {};
+
+  games.forEach((name, i) => {
+    const idx = 5 + i * 3 + 1; // +1 = posisi kolom TO dalam grup (Player, TO, WIN/LOSE)
+    const key = normalizeName(name);
+    if(!(key in toMap) && dataRow[idx] !== undefined){
+      toMap[key] = dataRow[idx];
     }
-    
-    if (filtered.length === 0) {
-      tbody.innerHTML = `
-        <tr>
-          <td colspan="5" class="empty-state">
-            <i class="fas fa-search"></i>
-            <p>Tidak ada pasaran yang cocok dengan "${escapeHtml(filterText)}"</p>
-          </td>
-        </tr>
-      `;
-      return;
-    }
-    
-    let html = '';
-    filtered.forEach(item => {
-      const isSpecial = item.hari.toLowerCase().includes('libur');
-      const dayClass = isSpecial ? 'day-badge special' : 'day-badge';
-      
-      let linksHtml = `<a href="${escapeAttr(item.urlResult)}" target="_blank" rel="noopener noreferrer" class="btn-link"><i class="fas fa-chart-simple"></i> Result</a>`;
-      if (item.liveDraw) {
-        linksHtml += `<a href="${escapeAttr(item.liveDraw)}" target="_blank" rel="noopener noreferrer" class="btn-link btn-live"><i class="fas fa-play-circle"></i> Live Draw</a>`;
-      }
-      
-      html += `
-        <tr>
-          <td>
-            <div class="market-cell">
-              <span class="market-name">${escapeHtml(item.nama)}</span>
-            </div>
-          </td>
-          <td><span class="${dayClass}">${escapeHtml(item.hari)}</span></td>
-          <td><span class="time-badge time-close"><i class="far fa-clock"></i> ${escapeHtml(item.tutup)}</span></td>
-          <td><span class="time-badge time-open"><i class="fas fa-trophy"></i> ${escapeHtml(item.buka)}</span></td>
-          <td><div class="link-group">${linksHtml}</div></td>
-        </tr>
-      `;
-    });
-    tbody.innerHTML = html;
+  });
+
+  return toMap;
+}
+
+let lastValues = [];
+let lastGameNames = [];
+let lastFullText = '';
+
+function generate(){
+  const statusEl = document.getElementById('status');
+  const resultBody = document.getElementById('resultBody');
+  statusEl.className = '';
+  statusEl.textContent = '';
+
+  const raw = document.getElementById('rawData').value;
+  const gameNames = document.getElementById('gameList').value
+    .split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+
+  if(!raw.trim()){
+    statusEl.className = 'error';
+    statusEl.textContent = 'Data laporan masih kosong.';
+    return;
   }
 
-  function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>]/g, function(m) {
-      if (m === '&') return '&amp;';
-      if (m === '<') return '&lt;';
-      if (m === '>') return '&gt;';
-      return m;
-    });
+  let toMap;
+  try{
+    toMap = parseReport(raw);
+  }catch(e){
+    statusEl.className = 'error';
+    statusEl.textContent = e.message;
+    return;
   }
-  
-  function escapeAttr(str) {
-    if (!str) return '#';
-    return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+
+  const values = [];
+  const rowsHtml = [];
+  let missing = [];
+  let total = 0;
+
+  gameNames.forEach(name => {
+    const val = toMap[normalizeName(name)];
+    values.push(val !== undefined ? val : '0.00');
+    if(val === undefined){
+      missing.push(name);
+      rowsHtml.push(`<tr><td>${name}</td><td class="missing">tidak ditemukan</td></tr>`);
+    } else {
+      total += parseNumber(val);
+      rowsHtml.push(`<tr><td>${name}</td><td>${val}</td></tr>`);
+    }
+  });
+
+  lastValues = values;
+  lastGameNames = gameNames;
+  lastFullText = "💰 Rekapan TO Harian (Urutan A)\n\n" + gameNames.join('\t') + "\n" + values.join('\t');
+
+  const foundCount = gameNames.length - missing.length;
+
+  resultBody.innerHTML = `
+    <div class="stats">
+      <div class="stat${missing.length ? ' warn' : ''}">
+        <div class="stat-label">Game ditemukan</div>
+        <div class="stat-value">${foundCount} / ${gameNames.length}</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Total TO (yang ditemukan)</div>
+        <div class="stat-value">${formatNumber(total)}</div>
+      </div>
+    </div>
+    <table>
+      <thead><tr><th>Game</th><th>TO</th></tr></thead>
+      <tbody>${rowsHtml.join('')}</tbody>
+    </table>
+    <div class="copy-row">
+      <button class="btn-outline" id="copyValuesBtn">
+        <svg viewBox="0 0 20 20" fill="none"><rect x="6" y="6" width="10" height="11" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M4 13V5a1.5 1.5 0 0 1 1.5-1.5H12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Copy nominal saja
+      </button>
+      <button class="btn-outline" id="copyAllBtn">
+        <svg viewBox="0 0 20 20" fill="none"><rect x="6" y="6" width="10" height="11" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M4 13V5a1.5 1.5 0 0 1 1.5-1.5H12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Copy nama + nominal
+      </button>
+    </div>
+  `;
+
+  document.getElementById('copyValuesBtn').addEventListener('click', () => {
+    copyText(lastValues.join('\t'), 'Nominal saja sudah dicopy ke clipboard.');
+  });
+  document.getElementById('copyAllBtn').addEventListener('click', () => {
+    copyText(lastFullText, 'Nama game + nominal sudah dicopy ke clipboard.');
+  });
+
+  if(missing.length){
+    statusEl.className = 'error';
+    statusEl.textContent = `Berhasil, tapi ${missing.length} nama game tidak ditemukan: ${missing.join(', ')}`;
+  } else {
+    statusEl.className = 'ok';
+    statusEl.textContent = `Berhasil, ${gameNames.length} game ditemukan semua.`;
   }
-  
-  if (searchInput) {
-    searchInput.addEventListener('input', (e) => {
-      renderTable(e.target.value);
-    });
-  }
-  
-  renderTable('');
+}
+
+function copyText(text, message){
+  navigator.clipboard.writeText(text).then(() => {
+    const statusEl = document.getElementById('status');
+    statusEl.className = 'ok';
+    statusEl.textContent = message;
+  });
+}
+
+document.getElementById('genBtn').addEventListener('click', generate);
 </script>
 </body>
 </html>
