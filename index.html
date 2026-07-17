@@ -2,352 +2,697 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Rekap TO Harian</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jadwal Shift — Juli 2026</title>
 <style>
   :root{
-    --bg:#f3f7f5;
-    --card:#ffffff;
-    --card-alt:#f7faf8;
-    --border:#dfe8e3;
-    --border-strong:#c9d6cf;
-    --text:#0f231b;
-    --muted:#5c6c65;
-    --faint:#8a978f;
-    --accent:#0f9d70;
-    --accent-dark:#0b7a56;
-    --accent-soft:#e5f5ee;
-    --danger:#c0392b;
-    --danger-soft:#fbeae8;
-    --radius-lg:16px;
-    --radius-md:12px;
-    --radius-sm:8px;
-    --shadow:0 1px 2px rgba(15,35,27,0.04), 0 12px 28px -16px rgba(15,35,27,0.16);
+    --bg:#0f1420;
+    --panel:#161d2e;
+    --panel-2:#1c2437;
+    --line:#2a3348;
+    --text:#eef1f8;
+    --muted:#8b96b3;
+    --gold:#e8b34f;
+
+    --pagi:#f4b942;
+    --pagi-ink:#2b1c00;
+
+    --malam:#4a5bc9;
+    --malam-ink:#eef0ff;
+
+    --off:#ef5b5b;
+    --off-ink:#2a0000;
+
+    --cuti:#f4e04d;
+    --cuti-ink:#2b2600;
+
+    --blank:#26304a;
+    --blank-ink:#5b6788;
   }
-  *{box-sizing:border-box}
+  *{box-sizing:border-box;}
   body{
-    margin:0; padding:48px 20px 80px; background:
-      radial-gradient(1200px 480px at 50% -10%, #eaf6ef 0%, var(--bg) 55%);
+    margin:0;
+    background:
+      radial-gradient(1200px 500px at 10% -10%, #1b2540 0%, transparent 60%),
+      radial-gradient(900px 400px at 100% 0%, #201530 0%, transparent 55%),
+      var(--bg);
+    font-family:'Segoe UI', Roboto, Inter, Arial, sans-serif;
     color:var(--text);
-    font-family:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    padding:28px 20px 70px;
   }
-  .wrap{max-width:780px; margin:0 auto}
-
-  /* header */
-  .eyebrow{
-    display:inline-flex; align-items:center; gap:6px;
-    font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase;
-    color:var(--accent-dark); background:var(--accent-soft);
-    padding:5px 10px; border-radius:999px; margin-bottom:14px;
+  .header{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:14px;
+    margin-bottom:18px;
   }
-  .eyebrow .dot{width:6px; height:6px; border-radius:50%; background:var(--accent)}
   h1{
-    font-family:'Space Grotesk',sans-serif; font-size:30px; font-weight:600;
-    letter-spacing:-0.01em; margin:0 0 8px; line-height:1.15;
+    font-size:22px;
+    margin:0 0 4px;
+    letter-spacing:.01em;
+    font-weight:800;
   }
-  p.sub{color:var(--muted); font-size:15px; line-height:1.6; margin:0 0 36px; max-width:56ch}
+  h1 .accent{ color:var(--gold); }
+  .sub{
+    font-size:13px;
+    color:var(--muted);
+  }
+  #monthPicker{
+    padding:9px 12px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    font-size:13px;
+    font-weight:700;
+    background:var(--panel);
+    color:var(--gold);
+    outline:none;
+    min-width:170px;
+    font-family:inherit;
+    cursor:pointer;
+  }
+  #monthPicker:focus{ border-color:var(--gold); }
+  .toolbar{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    align-items:center;
+    margin-bottom:12px;
+  }
+  input[type=text], select{
+    padding:9px 12px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    font-size:13px;
+    background:var(--panel);
+    color:var(--text);
+    outline:none;
+    min-width:180px;
+    font-family:inherit;
+  }
+  input[type=text]::placeholder{ color:var(--muted); }
+  input[type=text]:focus, select:focus{ border-color:var(--gold); }
 
-  /* step cards */
-  .step{
-    background:var(--card); border:1px solid var(--border); border-radius:var(--radius-lg);
-    box-shadow:var(--shadow); padding:22px 24px 24px; margin-bottom:18px;
-  }
-  .step-head{display:flex; align-items:center; gap:12px; margin-bottom:14px}
-  .step-num{
-    flex:0 0 auto; width:26px; height:26px; border-radius:50%;
-    background:var(--text); color:#fff; font-family:'Space Grotesk',sans-serif;
-    font-size:13px; font-weight:600; display:flex; align-items:center; justify-content:center;
-  }
-  .step-title{font-size:15px; font-weight:600}
-  .step-desc{font-size:13px; color:var(--muted); margin:2px 0 0}
-
-  textarea{
-    width:100%; border:1px solid var(--border); border-radius:var(--radius-sm);
-    padding:12px 14px; font-family:'JetBrains Mono',ui-monospace,monospace; font-size:12.5px;
-    line-height:1.6; resize:vertical; color:var(--text); background:var(--card-alt);
-    transition:border-color .15s;
-  }
-  textarea:focus{outline:none; border-color:var(--accent); background:#fff}
-  #rawData{height:150px}
-  #gameList{height:120px}
-  .hint{color:var(--faint); font-size:12px; margin-top:8px; line-height:1.5}
-
-  /* buttons */
   button{
-    font-family:'Inter',sans-serif; border:none; border-radius:var(--radius-sm);
-    padding:11px 20px; font-size:14px; font-weight:600; cursor:pointer;
-    display:inline-flex; align-items:center; gap:7px; transition:background .15s, border-color .15s, color .15s;
+    font-family:inherit;
+    font-size:13px;
+    font-weight:600;
+    padding:9px 14px;
+    border-radius:8px;
+    border:1px solid var(--line);
+    background:var(--panel);
+    color:var(--text);
+    cursor:pointer;
+    transition:.15s ease;
   }
-  .btn-primary{background:var(--accent); color:#fff}
-  .btn-primary:hover{background:var(--accent-dark)}
-  .btn-outline{
-    background:#fff; color:var(--text); border:1px solid var(--border-strong);
-    padding:9px 16px; font-size:13px;
+  button:hover{ border-color:var(--gold); color:var(--gold); }
+  #clearBtn:hover{ border-color:var(--off); color:var(--off); }
+
+  /* ---- brush picker ---- */
+  .brush-bar{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:14px;
+    padding:10px 14px;
+    border:1px solid var(--line);
+    border-radius:10px;
+    background:var(--panel);
   }
-  .btn-outline:hover{border-color:var(--accent); color:var(--accent-dark)}
-  .btn-outline svg{width:14px; height:14px}
-
-  .generate-row{display:flex; align-items:center; gap:14px; flex-wrap:wrap}
-  #status{font-size:13px; font-weight:500}
-  #status.error{color:var(--danger)}
-  #status.ok{color:var(--accent-dark)}
-
-  /* results */
-  .result-head{display:flex; align-items:center; gap:12px; margin-bottom:16px}
-
-  .stats{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:18px}
-  .stat{
-    background:var(--card-alt); border:1px solid var(--border); border-radius:var(--radius-md);
-    padding:14px 16px;
+  .brush-label{
+    font-size:12px;
+    color:var(--muted);
+    font-weight:600;
+    margin-right:2px;
   }
-  .stat-label{font-size:11px; font-weight:600; letter-spacing:.04em; text-transform:uppercase; color:var(--faint)}
-  .stat-value{
-    font-family:'JetBrains Mono',monospace; font-size:19px; font-weight:600;
-    margin-top:4px; color:var(--text);
+  .brush-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    padding:8px 13px;
+    border-radius:8px;
+    border:2px solid var(--line);
+    background:var(--panel-2);
+    color:var(--text);
+    font-weight:700;
+    font-size:12.5px;
+    cursor:pointer;
+    transition:.12s ease;
   }
-  .stat.warn .stat-value{color:var(--danger)}
+  .brush-btn .dot{
+    width:11px;height:11px;border-radius:50%;display:inline-block;
+  }
+  .brush-btn.active{
+    border-color:currentColor;
+    transform:translateY(-1px);
+    box-shadow:0 4px 12px -4px rgba(0,0,0,.6);
+  }
+  .brush-btn[data-val="PAGI"]{ color:var(--pagi); }
+  .brush-btn[data-val="MALAM"]{ color:var(--malam); }
+  .brush-btn[data-val="OFF"]{ color:var(--off); }
+  .brush-btn[data-val="CUTI"]{ color:var(--cuti); }
+  .brush-btn[data-val="-"]{ color:var(--muted); }
 
-  table{width:100%; border-collapse:collapse; font-size:13px; border-radius:var(--radius-md); overflow:hidden}
+  .hint-drag{
+    font-size:11.5px;
+    color:var(--muted);
+    margin-left:auto;
+  }
+
+  .editnote{
+    font-size:12px;
+    color:var(--gold);
+    background:rgba(232,179,79,.08);
+    border:1px dashed rgba(232,179,79,.4);
+    padding:8px 12px;
+    border-radius:8px;
+    margin-bottom:14px;
+  }
+
+  .wrap{
+    overflow-x:auto;
+    border:1px solid var(--line);
+    border-radius:12px;
+    background:var(--panel);
+    box-shadow:0 20px 50px -25px rgba(0,0,0,.7);
+    user-select:none;
+    -webkit-user-select:none;
+  }
+  table{
+    border-collapse:separate;
+    border-spacing:0;
+    font-size:11.5px;
+    min-width:1500px;
+    width:100%;
+  }
+  th,td{
+    padding:8px 5px;
+    text-align:center;
+    white-space:nowrap;
+    border-bottom:1px solid var(--line);
+    border-right:1px solid var(--line);
+  }
   thead th{
-    background:var(--card-alt); color:var(--muted); font-weight:600; font-size:11.5px;
-    letter-spacing:.03em; text-transform:uppercase; text-align:left; padding:9px 12px;
-    border-bottom:1px solid var(--border);
+    background:var(--panel-2);
+    color:var(--gold);
+    font-weight:700;
+    position:sticky;
+    top:0;
+    z-index:3;
+    padding-top:10px;
+    padding-bottom:10px;
   }
-  thead th:last-child{text-align:right}
-  tbody td{padding:9px 12px; border-bottom:1px solid var(--border); font-size:13px}
-  tbody tr:last-child td{border-bottom:none}
-  tbody td:last-child{
-    text-align:right; font-family:'JetBrains Mono',monospace; font-size:12.5px;
+  thead th .dow{
+    display:block;
+    font-weight:400;
+    font-size:9.5px;
+    color:var(--muted);
+    margin-top:1px;
   }
-  tbody tr:nth-child(even){background:#fbfcfb}
-  .missing{color:var(--danger); font-style:italic; font-size:12px}
+  thead th.corner{
+    left:0;
+    z-index:5;
+    text-align:left;
+    padding-left:14px;
+  }
+  .name-col{
+    position:sticky;
+    left:0;
+    z-index:2;
+    background:var(--panel-2);
+    text-align:left;
+    padding-left:14px;
+    font-weight:700;
+    min-width:120px;
+    color:var(--text);
+    border-right:1px solid var(--line);
+  }
+  tbody tr:hover .name-col{ background:#232d47; }
 
-  .copy-row{display:flex; gap:10px; flex-wrap:wrap; margin-top:18px}
-  .empty-state{
-    text-align:center; padding:36px 16px; color:var(--faint); font-size:13px;
-    border:1px dashed var(--border-strong); border-radius:var(--radius-md);
+  td.cell{ cursor:pointer; transition:.1s; }
+  td.cell:hover{ outline:2px solid var(--gold); outline-offset:-2px; }
+  td.cell.painting{ outline:2px solid #fff; outline-offset:-2px; }
+
+  td.PAGI{ background:var(--pagi); color:var(--pagi-ink); font-weight:700; }
+  td.MALAM{ background:var(--malam); color:var(--malam-ink); font-weight:700; }
+  td.OFF{ background:var(--off); color:var(--off-ink); font-weight:800; }
+  td.CUTI{ background:var(--cuti); color:var(--cuti-ink); font-weight:800; }
+  td.BLANK{ background:var(--blank); color:var(--blank-ink); }
+
+  tbody tr.dim td:not(.name-col){ opacity:.2; }
+
+  th.weekend{ background:#2a2140 !important; }
+
+  tfoot td{
+    background:var(--panel-2);
+    font-weight:700;
+    color:var(--text);
+    border-bottom:none;
+  }
+  tfoot .name-col{ background:#212a44; color:var(--gold); }
+  tfoot tr:first-child td{ border-top:2px solid var(--line); }
+
+  .footnote{
+    margin-top:14px;
+    font-size:11.5px;
+    color:var(--muted);
+  }
+
+  /* ---- Panel filter siapa masuk ---- */
+  .filter-panel{
+    margin-top:32px;
+    border:1px solid var(--line);
+    border-radius:12px;
+    background:var(--panel);
+    padding:18px 20px 22px;
+    box-shadow:0 20px 50px -25px rgba(0,0,0,.7);
+  }
+  .filter-panel h2{
+    font-size:16px;
+    margin:0 0 4px;
+    font-weight:800;
+  }
+  .filter-panel .sub{ margin-bottom:14px; }
+  .filter-controls{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:18px;
+  }
+  .filter-controls select{ min-width:160px; }
+  .who-grid{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:14px;
+  }
+  .who-col{
+    border-radius:10px;
+    padding:14px;
+    background:var(--panel-2);
+    border:1px solid var(--line);
+  }
+  .who-col h3{
+    margin:0 0 10px;
+    font-size:13px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .who-col h3 .count{
+    margin-left:auto;
+    font-size:12px;
+    color:var(--muted);
+    font-weight:400;
+  }
+  .who-col.pagi h3{ color:var(--pagi); }
+  .who-col.malam h3{ color:var(--malam); }
+  .who-col.off h3{ color:var(--off); }
+  .who-col.cuti h3{ color:var(--cuti); }
+  .who-list{
+    list-style:none;
+    margin:0;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+  .who-list li{
+    background:var(--bg);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:6px 10px;
+    font-size:12.5px;
+    font-weight:600;
+  }
+
+  @media (max-width:820px){
+    .who-grid{ grid-template-columns:repeat(2, 1fr); }
+  }
+  @media (max-width:640px){
+    body{padding:16px 10px 50px;}
+    h1{font-size:18px;}
   }
 </style>
 </head>
 <body>
+
+<div class="header">
+  <div>
+    <h1>Jadwal Shift <span class="accent" id="monthTitle">Juli 2026</span></h1>
+    <div class="sub">Pilih warna shift di bawah, lalu klik atau seret di atas tanggal untuk mengisi banyak sekaligus.</div>
+  </div>
+  <div>
+    <select id="monthPicker"></select>
+  </div>
+</div>
+
+<div class="brush-bar">
+  <span class="brush-label">Pilih shift lalu seret ke tabel:</span>
+  <button class="brush-btn" data-val="-"><i class="dot" style="background:var(--blank)"></i>Kosong</button>
+  <button class="brush-btn active" data-val="PAGI"><i class="dot" style="background:var(--pagi)"></i>PAGI</button>
+  <button class="brush-btn" data-val="MALAM"><i class="dot" style="background:var(--malam)"></i>MALAM</button>
+  <button class="brush-btn" data-val="OFF"><i class="dot" style="background:var(--off)"></i>OFF</button>
+  <button class="brush-btn" data-val="CUTI"><i class="dot" style="background:var(--cuti)"></i>CUTI</button>
+  <span class="hint-drag">🖱️ Klik & seret melintasi beberapa tanggal untuk mengisi sekaligus</span>
+</div>
+
+<div class="toolbar">
+  <input type="text" id="search" placeholder="Cari nama karyawan…">
+  <button id="clearBtn">🗑 Kosongkan Semua</button>
+</div>
+
 <div class="wrap">
+  <table id="schedule">
+    <thead>
+      <tr id="headRow">
+        <th class="corner name-col">NAMA</th>
+      </tr>
+    </thead>
+    <tbody id="body"></tbody>
+    <tfoot>
+      <tr id="pagiRow"><td class="name-col">Total PAGI</td></tr>
+      <tr id="malamRow"><td class="name-col">Total MALAM</td></tr>
+    </tfoot>
+  </table>
+</div>
 
-  <span class="eyebrow"><span class="dot"></span>Alat internal</span>
-  <h1>💰 Rekap TO harian</h1>
-  <p class="sub">Tempel data laporan mentah, atur daftar game, lalu generate. Semua perhitungan berjalan langsung di browser kamu — tidak ada data yang dikirim keluar.</p>
+<div class="footnote">Total PAGI/MALAM di bawah tabel dihitung otomatis dan akan berubah mengikuti setiap edit yang kamu buat.</div>
 
-  <div class="step">
-    <div class="step-head">
-      <div class="step-num">1</div>
-      <div>
-        <div class="step-title">Paste data laporan</div>
-        <p class="step-desc">Format tab-separated: baris nama game, baris Player/TO/WIN-LOSE, lalu baris data.</p>
-      </div>
-    </div>
-    <textarea id="rawData" placeholder="Tempel data mentah di sini..."></textarea>
-    <div class="hint">Dari Excel: select semua cell yang relevan → copy → paste langsung ke sini. Excel otomatis memakai tab sebagai pemisah kolom.</div>
+<!-- ---- Panel: siapa saja yang masuk pada tanggal tertentu ---- -->
+<div class="filter-panel">
+  <h2>Cek Siapa Saja yang Masuk</h2>
+  <div class="sub">Pilih tanggal untuk melihat daftar nama yang PAGI, MALAM, OFF, dan CUTI pada hari itu.</div>
+  <div class="filter-controls">
+    <select id="dateFilter"></select>
   </div>
-
-  <div class="step">
-    <div class="step-head">
-      <div class="step-num">2</div>
-      <div>
-        <div class="step-title">Daftar game & urutannya</div>
-        <p class="step-desc">Satu nama per baris. Urutan di sini menentukan urutan hasil.</p>
-      </div>
+  <div class="who-grid">
+    <div class="who-col pagi">
+      <h3>☀️ PAGI <span class="count" id="pagiCount">0</span></h3>
+      <ul class="who-list" id="pagiList"></ul>
     </div>
-    <textarea id="gameList">BANGKOK 0130
-BANGKOK 0930
-BRUNEI02
-BRUNEI14
-BRUNEI21
-CHELSEA11
-CHELSEA15
-CHELSEA19
-CHELSEA21
-HUAHIN0100
-HUAHIN1630
-HUAHIN2100
-NEVADA
-POIPET12
-POIPET15
-POIPET19
-POIPET22
-TOTO CAMBODIA LIVE
-TOTOMALI1530
-TOTOMALI2030
-TOTOMALI2330
-HOKI DRAW</textarea>
-  </div>
-
-  <div class="step">
-    <div class="generate-row">
-      <button id="genBtn" class="btn-primary">
-        <svg viewBox="0 0 20 20" fill="none" width="15" height="15"><path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Generate rekap
-      </button>
-      <span id="status"></span>
+    <div class="who-col malam">
+      <h3>🌙 MALAM <span class="count" id="malamCount">0</span></h3>
+      <ul class="who-list" id="malamList"></ul>
+    </div>
+    <div class="who-col off">
+      <h3>⛔ OFF <span class="count" id="offCount">0</span></h3>
+      <ul class="who-list" id="offList"></ul>
+    </div>
+    <div class="who-col cuti">
+      <h3>🌴 CUTI <span class="count" id="cutiCount">0</span></h3>
+      <ul class="who-list" id="cutiList"></ul>
     </div>
   </div>
-
-  <div class="step">
-    <div class="result-head">
-      <div class="step-num">3</div>
-      <div class="step-title">Hasil</div>
-    </div>
-
-    <div id="resultBody">
-      <div class="empty-state">Belum ada hasil — isi data di atas lalu klik generate.</div>
-    </div>
-  </div>
-
 </div>
 
 <script>
-function normalizeName(name){
-  return name.trim().toUpperCase().replace(/\s+/g, ' ');
+const NAMES = ["FACHRI","HAFIZ","JOHAN","AUDI","DENI","MICHAEL","DONI","TAUFIK","ROBY","ANDI","ARGA","ILHAM","LAOLI","EGI","SYARIFAH","BAHAR","DIKA"];
+const dayNames = ["Min","Sen","Sel","Rab","Kam","Jum","Sab"];
+const monthNames = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+const monthShort = ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
+
+// Rentang bulan yang bisa dipilih: setahun ke belakang s/d setahun ke depan dari bulan sekarang
+const today = new Date();
+const MONTH_OPTIONS = [];
+for(let offset=-12; offset<=12; offset++){
+  const d = new Date(today.getFullYear(), today.getMonth()+offset, 1);
+  MONTH_OPTIONS.push({ year: d.getFullYear(), month: d.getMonth() });
 }
 
-function parseNumber(str){
-  if(!str) return 0;
-  const n = parseFloat(str.replace(/,/g, ''));
-  return isNaN(n) ? 0 : n;
+let YEAR, MONTH, DAYS;
+
+function daysInMonth(year, month){
+  return new Date(year, month+1, 0).getDate();
 }
 
-function formatNumber(n){
-  return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+function storageKeyFor(year, month){
+  return "jadwal_shift_v3_" + year + "_" + String(month+1).padStart(2,'0');
 }
 
-function parseReport(raw){
-  const lines = raw.split(/\r?\n/).filter(l => l.trim().length > 0);
-  if(lines.length < 3){
-    throw new Error("Data kurang dari 3 baris. Pastikan kamu paste header nama game, header Player/TO/WIN-LOSE, dan baris data.");
-  }
-  const header1 = lines[0].split('\t');
-  const dataRow = lines[2].split('\t');
-
-  // 5 kolom pertama = No, Date, Jumlah Pemain, Jumlah TO, Jumlah Menang Kalah
-  const games = header1.slice(5);
-  const toMap = {};
-
-  games.forEach((name, i) => {
-    const idx = 5 + i * 3 + 1; // +1 = posisi kolom TO dalam grup (Player, TO, WIN/LOSE)
-    const key = normalizeName(name);
-    if(!(key in toMap) && dataRow[idx] !== undefined){
-      toMap[key] = dataRow[idx];
-    }
-  });
-
-  return toMap;
+function emptySchedule(days){
+  const s = {};
+  NAMES.forEach(n=>{ s[n] = new Array(days).fill("-"); });
+  return s;
 }
 
-let lastValues = [];
-let lastGameNames = [];
-let lastFullText = '';
-
-function generate(){
-  const statusEl = document.getElementById('status');
-  const resultBody = document.getElementById('resultBody');
-  statusEl.className = '';
-  statusEl.textContent = '';
-
-  const raw = document.getElementById('rawData').value;
-  const gameNames = document.getElementById('gameList').value
-    .split(/\r?\n/).map(s => s.trim()).filter(Boolean);
-
-  if(!raw.trim()){
-    statusEl.className = 'error';
-    statusEl.textContent = 'Data laporan masih kosong.';
-    return;
-  }
-
-  let toMap;
+function loadSchedule(year, month, days){
   try{
-    toMap = parseReport(raw);
-  }catch(e){
-    statusEl.className = 'error';
-    statusEl.textContent = e.message;
+    const saved = localStorage.getItem(storageKeyFor(year, month));
+    if(saved){
+      const parsed = JSON.parse(saved);
+      // Pastikan panjang array sesuai jumlah hari bulan ini
+      NAMES.forEach(n=>{
+        if(!Array.isArray(parsed[n])) parsed[n] = new Array(days).fill("-");
+        while(parsed[n].length < days) parsed[n].push("-");
+        parsed[n].length = days;
+      });
+      return parsed;
+    }
+  }catch(e){}
+  return emptySchedule(days);
+}
+function saveSchedule(){
+  try{ localStorage.setItem(storageKeyFor(YEAR, MONTH), JSON.stringify(schedule)); }catch(e){}
+}
+
+let schedule;
+let currentBrush = "PAGI";
+let isPainting = false;
+
+function cellClass(val){
+  return val === "-" ? "BLANK" : val;
+}
+
+const headRow = document.getElementById('headRow');
+const body = document.getElementById('body');
+
+function buildHeader(){
+  headRow.innerHTML = '<th class="corner name-col">NAMA</th>';
+  for(let d=1; d<=DAYS; d++){
+    const date = new Date(YEAR, MONTH, d);
+    const isWeekend = date.getDay()===0 || date.getDay()===6;
+    const th = document.createElement('th');
+    th.innerHTML = d + ' ' + monthShort[MONTH] + '<span class="dow">' + dayNames[date.getDay()] + '</span>';
+    if(isWeekend) th.classList.add('weekend');
+    headRow.appendChild(th);
+  }
+}
+
+function buildBody(){
+  body.innerHTML = '';
+  NAMES.forEach(name=>{
+    const tr = document.createElement('tr');
+    tr.dataset.name = name.toLowerCase();
+    const nameTd = document.createElement('td');
+    nameTd.className = 'name-col';
+    nameTd.textContent = name;
+    tr.appendChild(nameTd);
+    schedule[name].forEach((val, i)=>{
+      const td = document.createElement('td');
+      td.className = 'cell ' + cellClass(val);
+      td.textContent = val;
+      td.dataset.name = name;
+      td.dataset.idx = i;
+      tr.appendChild(td);
+    });
+    body.appendChild(tr);
+  });
+}
+
+function paintCell(td){
+  const name = td.dataset.name;
+  const idx = parseInt(td.dataset.idx, 10);
+  if(schedule[name][idx] === currentBrush) return;
+  schedule[name][idx] = currentBrush;
+  td.className = 'cell ' + cellClass(currentBrush) + ' painting';
+  td.textContent = currentBrush;
+}
+
+// ---- Mouse drag-to-fill ----
+body.addEventListener('mousedown', e=>{
+  const td = e.target.closest('td.cell');
+  if(!td) return;
+  e.preventDefault();
+  isPainting = true;
+  paintCell(td);
+});
+body.addEventListener('mouseover', e=>{
+  if(!isPainting) return;
+  const td = e.target.closest('td.cell');
+  if(!td) return;
+  paintCell(td);
+});
+document.addEventListener('mouseup', ()=>{
+  if(isPainting){
+    isPainting = false;
+    document.querySelectorAll('td.painting').forEach(td=>td.classList.remove('painting'));
+    saveSchedule();
+    buildTotals();
+    renderWhoPanel();
+  }
+});
+
+// ---- Touch support (mobile) ----
+body.addEventListener('touchstart', e=>{
+  const touch = e.touches[0];
+  const el = document.elementFromPoint(touch.clientX, touch.clientY);
+  const td = el && el.closest('td.cell');
+  if(!td) return;
+  isPainting = true;
+  paintCell(td);
+}, {passive:true});
+body.addEventListener('touchmove', e=>{
+  if(!isPainting) return;
+  const touch = e.touches[0];
+  const el = document.elementFromPoint(touch.clientX, touch.clientY);
+  const td = el && el.closest('td.cell');
+  if(!td) return;
+  paintCell(td);
+}, {passive:true});
+document.addEventListener('touchend', ()=>{
+  if(isPainting){
+    isPainting = false;
+    document.querySelectorAll('td.painting').forEach(td=>td.classList.remove('painting'));
+    saveSchedule();
+    buildTotals();
+    renderWhoPanel();
+  }
+});
+
+function buildTotals(){
+  const pagiRow = document.getElementById('pagiRow');
+  const malamRow = document.getElementById('malamRow');
+  pagiRow.innerHTML = '<td class="name-col">Total PAGI</td>';
+  malamRow.innerHTML = '<td class="name-col">Total MALAM</td>';
+  for(let i=0;i<DAYS;i++){
+    let pagi=0, malam=0;
+    NAMES.forEach(n=>{
+      if(schedule[n][i]==='PAGI') pagi++;
+      if(schedule[n][i]==='MALAM') malam++;
+    });
+    const tp = document.createElement('td'); tp.textContent = pagi; pagiRow.appendChild(tp);
+    const tm = document.createElement('td'); tm.textContent = malam; malamRow.appendChild(tm);
+  }
+}
+
+// ---- Panel "siapa saja yang masuk" ----
+const dateFilter = document.getElementById('dateFilter');
+function buildDateFilter(){
+  dateFilter.innerHTML = '';
+  for(let d=1; d<=DAYS; d++){
+    const date = new Date(YEAR, MONTH, d);
+    const opt = document.createElement('option');
+    opt.value = d - 1;
+    opt.textContent = d + ' ' + monthShort[MONTH] + ' ' + YEAR + ' (' + dayNames[date.getDay()] + ')';
+    dateFilter.appendChild(opt);
+  }
+  const now = new Date();
+  if(now.getFullYear()===YEAR && now.getMonth()===MONTH && now.getDate()>=1 && now.getDate()<=DAYS){
+    dateFilter.value = now.getDate() - 1;
+  } else {
+    dateFilter.value = 0;
+  }
+}
+
+function renderWhoPanel(){
+  const idx = parseInt(dateFilter.value, 10);
+  const pagiNames = [], malamNames = [], offNames = [], cutiNames = [];
+  NAMES.forEach(n=>{
+    const v = schedule[n][idx];
+    if(v==='PAGI') pagiNames.push(n);
+    else if(v==='MALAM') malamNames.push(n);
+    else if(v==='OFF') offNames.push(n);
+    else if(v==='CUTI') cutiNames.push(n);
+  });
+  fillList('pagiList','pagiCount', pagiNames);
+  fillList('malamList','malamCount', malamNames);
+  fillList('offList','offCount', offNames);
+  fillList('cutiList','cutiCount', cutiNames);
+}
+
+function fillList(listId, countId, names){
+  const ul = document.getElementById(listId);
+  const countEl = document.getElementById(countId);
+  countEl.textContent = names.length;
+  ul.innerHTML = '';
+  if(names.length === 0){
+    const li = document.createElement('li');
+    li.style.background = 'transparent';
+    li.style.border = 'none';
+    li.style.fontStyle = 'italic';
+    li.style.fontWeight = '400';
+    li.style.color = 'var(--muted)';
+    li.textContent = 'Belum ada.';
+    ul.appendChild(li);
     return;
   }
-
-  const values = [];
-  const rowsHtml = [];
-  let missing = [];
-  let total = 0;
-
-  gameNames.forEach(name => {
-    const val = toMap[normalizeName(name)];
-    values.push(val !== undefined ? val : '0.00');
-    if(val === undefined){
-      missing.push(name);
-      rowsHtml.push(`<tr><td>${name}</td><td class="missing">tidak ditemukan</td></tr>`);
-    } else {
-      total += parseNumber(val);
-      rowsHtml.push(`<tr><td>${name}</td><td>${val}</td></tr>`);
-    }
-  });
-
-  lastValues = values;
-  lastGameNames = gameNames;
-  lastFullText = "💰 Rekapan TO Harian (Urutan A)\n\n" + gameNames.join('\t') + "\n" + values.join('\t');
-
-  const foundCount = gameNames.length - missing.length;
-
-  resultBody.innerHTML = `
-    <div class="stats">
-      <div class="stat${missing.length ? ' warn' : ''}">
-        <div class="stat-label">Game ditemukan</div>
-        <div class="stat-value">${foundCount} / ${gameNames.length}</div>
-      </div>
-      <div class="stat">
-        <div class="stat-label">Total TO (yang ditemukan)</div>
-        <div class="stat-value">${formatNumber(total)}</div>
-      </div>
-    </div>
-    <table>
-      <thead><tr><th>Game</th><th>TO</th></tr></thead>
-      <tbody>${rowsHtml.join('')}</tbody>
-    </table>
-    <div class="copy-row">
-      <button class="btn-outline" id="copyValuesBtn">
-        <svg viewBox="0 0 20 20" fill="none"><rect x="6" y="6" width="10" height="11" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M4 13V5a1.5 1.5 0 0 1 1.5-1.5H12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        Copy nominal saja
-      </button>
-      <button class="btn-outline" id="copyAllBtn">
-        <svg viewBox="0 0 20 20" fill="none"><rect x="6" y="6" width="10" height="11" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M4 13V5a1.5 1.5 0 0 1 1.5-1.5H12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        Copy nama + nominal
-      </button>
-    </div>
-  `;
-
-  document.getElementById('copyValuesBtn').addEventListener('click', () => {
-    copyText(lastValues.join('\t'), 'Nominal saja sudah dicopy ke clipboard.');
-  });
-  document.getElementById('copyAllBtn').addEventListener('click', () => {
-    copyText(lastFullText, 'Nama game + nominal sudah dicopy ke clipboard.');
-  });
-
-  if(missing.length){
-    statusEl.className = 'error';
-    statusEl.textContent = `Berhasil, tapi ${missing.length} nama game tidak ditemukan: ${missing.join(', ')}`;
-  } else {
-    statusEl.className = 'ok';
-    statusEl.textContent = `Berhasil, ${gameNames.length} game ditemukan semua.`;
-  }
-}
-
-function copyText(text, message){
-  navigator.clipboard.writeText(text).then(() => {
-    const statusEl = document.getElementById('status');
-    statusEl.className = 'ok';
-    statusEl.textContent = message;
+  names.forEach(n=>{
+    const li = document.createElement('li');
+    li.textContent = n;
+    ul.appendChild(li);
   });
 }
 
-document.getElementById('genBtn').addEventListener('click', generate);
+// ---- Pemilih bulan ----
+const monthPicker = document.getElementById('monthPicker');
+const monthTitle = document.getElementById('monthTitle');
+MONTH_OPTIONS.forEach((opt, i)=>{
+  const o = document.createElement('option');
+  o.value = i;
+  o.textContent = monthNames[opt.month] + ' ' + opt.year;
+  monthPicker.appendChild(o);
+});
+const defaultIdx = MONTH_OPTIONS.findIndex(o=>o.year===today.getFullYear() && o.month===today.getMonth());
+monthPicker.value = defaultIdx >= 0 ? defaultIdx : 0;
+
+function loadMonth(){
+  const sel = MONTH_OPTIONS[parseInt(monthPicker.value, 10)];
+  YEAR = sel.year;
+  MONTH = sel.month;
+  DAYS = daysInMonth(YEAR, MONTH);
+  schedule = loadSchedule(YEAR, MONTH, DAYS);
+  monthTitle.textContent = monthNames[MONTH] + ' ' + YEAR;
+  buildHeader();
+  buildBody();
+  buildTotals();
+  buildDateFilter();
+  renderWhoPanel();
+  // Terapkan filter pencarian yang sedang aktif (jika ada)
+  document.getElementById('search').dispatchEvent(new Event('input'));
+}
+
+monthPicker.addEventListener('change', loadMonth);
+
+loadMonth();
+
+document.getElementById('search').addEventListener('input', e=>{
+  const q = e.target.value.trim().toLowerCase();
+  document.querySelectorAll('#body tr').forEach(tr=>{
+    tr.classList.toggle('dim', q.length>0 && !tr.dataset.name.includes(q));
+  });
+});
+
+document.getElementById('clearBtn').addEventListener('click', ()=>{
+  if(!confirm('Kosongkan semua shift bulan ini? Semua isian yang sudah kamu buat akan dihapus.')) return;
+  schedule = emptySchedule(DAYS);
+  saveSchedule();
+  buildBody();
+  buildTotals();
+  renderWhoPanel();
+});
+
+// ---- Brush picker ----
+document.querySelectorAll('.brush-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.brush-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    currentBrush = btn.dataset.val;
+  });
+});
+
+dateFilter.addEventListener('change', renderWhoPanel);
 </script>
 </body>
 </html>
